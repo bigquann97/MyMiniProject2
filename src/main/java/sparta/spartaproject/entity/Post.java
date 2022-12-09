@@ -20,8 +20,4 @@ public class Post extends TimeStamped {
 
     @Lob
     private String content;
-
-    @ManyToOne
-    @JoinColumn(name = "loginId", nullable = false)
-    private User user;
 }

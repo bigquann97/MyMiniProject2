@@ -36,9 +36,6 @@ public class User extends TimeStamped {
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 
-    @OneToMany
-    private List<Post> posts;
-
     public static User of(SignupRequestDto signupRequestDto) {
         return User.builder()
                 .loginId(signupRequestDto.getLoginId())
@@ -52,11 +49,6 @@ public class User extends TimeStamped {
 
 
     public boolean hasThisPost(Post findPost) {
-        for (Post post : posts) {
-            if (post.equals(findPost)) {
-                return true;
-            }
-        }
-        return false;
+        return true;
     }
 }

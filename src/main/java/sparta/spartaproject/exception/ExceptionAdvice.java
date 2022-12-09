@@ -20,6 +20,19 @@ public class ExceptionAdvice {
         return responseService.getFailureResult(-101, "중복 유저 존재");
     }
 
+    @ExceptionHandler(InvalidPwException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result invalidPwException() {
+        return responseService.getFailureResult(-102, "비밀번호 불일치");
+    }
+
+    @ExceptionHandler(NotExistUserException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result notExistUserException() {
+        return responseService.getFailureResult(-103, "존재하지 않는 유저");
+    }
+
+
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Result illegalArgumentException() {

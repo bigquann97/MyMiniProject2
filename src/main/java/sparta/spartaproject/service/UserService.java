@@ -9,6 +9,8 @@ import sparta.spartaproject.dto.SignupRequestDto;
 import sparta.spartaproject.dto.SignupResponseDto;
 import sparta.spartaproject.entity.User;
 import sparta.spartaproject.exception.AlreadyExistUserException;
+import sparta.spartaproject.exception.InvalidPwException;
+import sparta.spartaproject.exception.NotExistUserException;
 import sparta.spartaproject.jwt.JwtUtil;
 import sparta.spartaproject.repository.UserRepository;
 
@@ -26,10 +28,8 @@ public class UserService {
     @Transactional(readOnly = false)
     public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
         Optional<User> findUser = userRepository.findUserByLoginId(signupRequestDto.getLoginId());
-
         if (findUser.isPresent())
             throw new AlreadyExistUserException();
-
         String encodedPw = passwordEncoder.encode(signupRequestDto.getLoginPw());
         signupRequestDto.changePw(encodedPw);
         User signupUser = User.of(signupRequestDto);
@@ -40,9 +40,9 @@ public class UserService {
     @Transactional(readOnly = true)
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         Optional<User> findUser = userRepository.findUserByLoginId(loginRequestDto.getLoginId());
-        User loginUser = findUser.orElseThrow(() -> new IllegalArgumentException("없는 유저"));
+        User loginUser = findUser.orElseThrow(() -> new NotExistUserException("존재하지 않는 유저1"));
         if(! passwordEncoder.matches(loginRequestDto.getLoginPw(), loginUser.getLoginPw())) {
-            throw new IllegalArgumentException("비밀번호 오류");
+            throw new InvalidPwException("비밀번호 불일치");
         }
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginUser.getLoginId(), loginUser.getRole()));
     }
