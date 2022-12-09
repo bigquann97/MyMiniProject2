@@ -4,11 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sparta.spartaproject.dto.PostRequestDto;
+import sparta.spartaproject.dto.PostReq;
+import sparta.spartaproject.dto.PostRes;
 import sparta.spartaproject.service.PostService;
+import sparta.spartaproject.service.ResultService;
+import sparta.spartaproject.service.result.Result;
+import sparta.spartaproject.service.result.Status;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RequestMapping("/api/post")
 @RestController
@@ -16,36 +20,41 @@ import javax.servlet.http.HttpServletResponse;
 public class PostController {
 
     private final PostService postService;
+    private final ResultService resultService;
 
     @GetMapping("/{id}")
-    public void getOnePost(@PathVariable Long id) {
-        postService.getOnePost(id);
-
-//        return ResponseEntity.status(HttpStatus.OK).body();
+    public ResponseEntity<Result> getOnePost(@PathVariable Long id) {
+        PostRes postRes = postService.getOnePost(id);
+        Result result = resultService.getSuccessDataResult(Status.S_POST_VIEW.getCode(), Status.S_POST_VIEW.getMsg(), postRes);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping
-    public void getAllPosts() {
-        postService.getAllPosts();
-//        return ResponseEntity.status(HttpStatus.OK).body();
+    public ResponseEntity<Result> getAllPosts() {
+        List<PostRes> posts = postService.getAllPosts();
+        Result result = resultService.getSuccessDataResult(Status.S_POST_VIEW.getCode(), Status.S_POST_VIEW.getMsg(), posts);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @PostMapping
-    public void uploadPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest request) {
-
-//        return ResponseEntity.status(HttpStatus.OK).body();
+    public ResponseEntity<Result> uploadPost(@RequestBody PostReq postReq, HttpServletRequest request) {
+        postService.uploadPost(postReq, request);
+        Result result = resultService.getSuccessResult(Status.S_POST_UPLOAD.getCode(), Status.S_POST_UPLOAD.getMsg());
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @PutMapping("/{id}")
-    public void modifyPost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto, HttpServletRequest request) {
-
-//        return ResponseEntity.status(HttpStatus.OK).body();
+    public ResponseEntity<Result> modifyPost(@PathVariable Long id, @RequestBody PostReq postReq, HttpServletRequest request) {
+        PostRes modifiedPost = postService.modifyPost(id, postReq, request);
+        Result result = resultService.getSuccessDataResult(Status.S_POST_MODIFY.getCode(), Status.S_POST_MODIFY.getMsg(), modifiedPost);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @DeleteMapping("/{id}")
-    public void deletePost(@PathVariable Long id, HttpServletRequest request) {
-
-//        return ResponseEntity.status(HttpStatus.OK).body();
+    public ResponseEntity<Result> deletePost(@PathVariable Long id, HttpServletRequest request) {
+        postService.deletePost(id, request);
+        Result result = resultService.getSuccessResult(Status.S_POST_DELETE.getCode(), Status.S_POST_DELETE.getMsg());
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
 }

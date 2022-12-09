@@ -1,6 +1,9 @@
 package sparta.spartaproject.dto;
 
-public class PostRequestDto {
+import lombok.Getter;
+
+@Getter
+public class PostReq {
     private String title;
     private String content;
 }

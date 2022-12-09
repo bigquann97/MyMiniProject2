@@ -1,9 +1,10 @@
 package sparta.spartaproject.entity;
 
 import lombok.*;
-import sparta.spartaproject.dto.SignupRequestDto;
+import sparta.spartaproject.dto.SignUpReq;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -29,26 +30,33 @@ public class User extends TimeStamped {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private Integer age;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 
-    public static User of(SignupRequestDto signupRequestDto) {
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Post> posts = new ArrayList<>();
+
+    public static User of(SignUpReq signUpReq) {
         return User.builder()
-                .loginId(signupRequestDto.getLoginId())
-                .loginPw(signupRequestDto.getLoginPw())
-                .age(signupRequestDto.getAge())
-                .email(signupRequestDto.getEmail())
-                .name(signupRequestDto.getName())
+                .loginId(signUpReq.getLoginId())
+                .loginPw(signUpReq.getLoginPw())
+                .age(signUpReq.getAge())
+                .email(signUpReq.getEmail())
+                .name(signUpReq.getName())
                 .role(UserRole.USER)
                 .build();
     }
 
-
     public boolean hasThisPost(Post findPost) {
-        return true;
+        for (Post post : posts) {
+            if (post.equals(findPost)) {
+                return true;
+            }
+        }
+        return false;
     }
+
 }

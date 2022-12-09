@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sparta.spartaproject.dto.LoginRequestDto;
-import sparta.spartaproject.dto.SignupRequestDto;
-import sparta.spartaproject.dto.SignupResponseDto;
+import sparta.spartaproject.dto.LoginReq;
+import sparta.spartaproject.dto.SignUpReq;
+import sparta.spartaproject.dto.SignupRes;
 import sparta.spartaproject.entity.User;
 import sparta.spartaproject.exception.AlreadyExistUserException;
-import sparta.spartaproject.exception.InvalidPwException;
+import sparta.spartaproject.exception.WrongPwException;
 import sparta.spartaproject.exception.NotExistUserException;
 import sparta.spartaproject.jwt.JwtUtil;
 import sparta.spartaproject.repository.UserRepository;
@@ -26,23 +26,23 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = false)
-    public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
-        Optional<User> findUser = userRepository.findUserByLoginId(signupRequestDto.getLoginId());
+    public SignupRes signup(SignUpReq signUpReq) {
+        Optional<User> findUser = userRepository.findUserByLoginId(signUpReq.getLoginId());
         if (findUser.isPresent())
             throw new AlreadyExistUserException();
-        String encodedPw = passwordEncoder.encode(signupRequestDto.getLoginPw());
-        signupRequestDto.changePw(encodedPw);
-        User signupUser = User.of(signupRequestDto);
+        String encodedPw = passwordEncoder.encode(signUpReq.getLoginPw());
+        signUpReq.changePw(encodedPw);
+        User signupUser = User.of(signUpReq);
         User savedUser = userRepository.save(signupUser);
-        return SignupResponseDto.of(savedUser);
+        return SignupRes.of(savedUser);
     }
 
     @Transactional(readOnly = true)
-    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        Optional<User> findUser = userRepository.findUserByLoginId(loginRequestDto.getLoginId());
-        User loginUser = findUser.orElseThrow(() -> new NotExistUserException("존재하지 않는 유저1"));
-        if(! passwordEncoder.matches(loginRequestDto.getLoginPw(), loginUser.getLoginPw())) {
-            throw new InvalidPwException("비밀번호 불일치");
+    public void login(LoginReq loginReq, HttpServletResponse response) {
+        Optional<User> findUser = userRepository.findUserByLoginId(loginReq.getLoginId());
+        User loginUser = findUser.orElseThrow(NotExistUserException::new);
+        if(! passwordEncoder.matches(loginReq.getLoginPw(), loginUser.getLoginPw())) {
+            throw new WrongPwException();
         }
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginUser.getLoginId(), loginUser.getRole()));
     }

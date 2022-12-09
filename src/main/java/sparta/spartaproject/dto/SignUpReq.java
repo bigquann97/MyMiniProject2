@@ -7,7 +7,7 @@ import javax.validation.constraints.*;
 
 @Builder
 @Getter
-public class SignupRequestDto {
+public class SignUpReq {
     @NotBlank
     @Size(min = 4, max = 10)
 //    @Pattern(regexp = "/[a-z0-9]/")

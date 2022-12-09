@@ -6,15 +6,15 @@ import sparta.spartaproject.entity.User;
 
 @Builder
 @Getter
-public class SignupResponseDto {
+public class SignupRes {
 
     private String loginId;
     private String name;
     private String email;
     private int age;
 
-    public static SignupResponseDto of(User user) {
-        return SignupResponseDto.builder()
+    public static SignupRes of(User user) {
+        return SignupRes.builder()
                 .loginId(user.getLoginId())
                 .name(user.getName())
                 .email(user.getEmail())

@@ -7,7 +7,7 @@ import sparta.spartaproject.service.result.DataResult;
 
 @Service
 @Transactional(readOnly = true)
-public class ResponseService {
+public class ResultService {
 
     public <T> Result getSuccessDataResult(int code, String msg, T data) {
         return DataResult.builder()
