@@ -24,8 +24,8 @@ public class PostController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Result> getOnePost(@PathVariable Long id) {
-        PostRes postRes = postService.getOnePost(id);
-        Result result = resultService.getSuccessDataResult(Status.S_POST_VIEW.getCode(), Status.S_POST_VIEW.getMsg(), postRes);
+        PostRes post = postService.getOnePost(id);
+        Result result = resultService.getSuccessDataResult(Status.S_POST_VIEW.getCode(), Status.S_POST_VIEW.getMsg(), post);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

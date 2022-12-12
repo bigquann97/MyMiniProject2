@@ -10,7 +10,7 @@ import sparta.spartaproject.entity.User;
 import sparta.spartaproject.exception.InvalidTokenException;
 import sparta.spartaproject.exception.NotExistPostException;
 import sparta.spartaproject.exception.NotExistUserException;
-import sparta.spartaproject.exception.UnautorizedException;
+import sparta.spartaproject.exception.UnauthorizedException;
 import sparta.spartaproject.jwt.JwtUtil;
 import sparta.spartaproject.repository.PostRepository;
 import sparta.spartaproject.repository.UserRepository;
@@ -68,7 +68,7 @@ public class PostService {
             if (findUser.hasThisPost(findPost)) {
                 postRepository.delete(findPost);
             } else {
-                throw new UnautorizedException();
+                throw new UnauthorizedException();
             }
         } else {
             throw new InvalidTokenException();
@@ -92,7 +92,7 @@ public class PostService {
                 postRepository.saveAndFlush(findPost);
                 return PostRes.of(findPost);
             } else {
-                throw new UnautorizedException();
+                throw new UnauthorizedException();
             }
         }
         throw new InvalidTokenException();

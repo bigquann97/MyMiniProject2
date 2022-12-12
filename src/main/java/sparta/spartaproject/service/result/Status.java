@@ -12,12 +12,12 @@ public enum Status {
     S_POST_MODIFY(112, "게시글을 정상적으로 수정했습니다."),
     S_POST_DELETE(113, "게시글을 정상적으로 삭제했습니다."),
 
-    F_INVALID_PW(300, "비밀번호가 재입력 비밀번호와 일치하지 않습니다."),
-    F_ALREADY_EXIST_USER(301, "중복된 아이디의 유저가 존재합니다."),
-    F_WRONG_PW(302, "잘못된 비밀번호입니다."),
-    F_NOT_EXIST_USER(303, "존재하지 않는 유저입니다."),
+    F_USER_INVALID_PW(300, "비밀번호가 재입력 비밀번호와 일치하지 않습니다."),
+    F_USER_ALREADY_EXIST(301, "중복된 아이디의 유저가 존재합니다."),
+    F_USER_WRONG_PW(302, "잘못된 비밀번호입니다."),
+    F_USER_NOT_EXIST(303, "존재하지 않는 유저입니다."),
 
-    F_NOT_EXIST_POST(310, "존재하지 않는 게시물입니다."),
+    F_POST_NOT_EXIST(310, "존재하지 않는 게시물입니다."),
 
     F_ILLEGAL_ARGUMENT(400, "잘못된 입력입니다."),
     F_INVALID_TOKEN(401, "잘못된 토큰입니다."),
@@ -29,8 +29,8 @@ public enum Status {
         this.msg = msg;
     }
 
-    private int code;
-    private String msg;
+    private final int code;
+    private final String msg;
 }
 
 

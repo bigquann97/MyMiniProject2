@@ -34,7 +34,7 @@ public class UserController {
             result = resultService.getSuccessDataResult(Status.S_USER_CREATED.getCode(), Status.S_USER_CREATED.getMsg(), resultData);
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } else {
-            result = resultService.getFailureResult(Status.F_INVALID_PW.getCode(), Status.F_INVALID_PW.getMsg());
+            result = resultService.getFailureResult(Status.F_USER_INVALID_PW.getCode(), Status.F_USER_INVALID_PW.getMsg());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         }
     }
@@ -42,7 +42,8 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Result> login(@RequestBody LoginReq loginReq, HttpServletResponse response) {
         userService.login(loginReq, response);
-        Result result = resultService.getSuccessResult(Status.S_USER_LOGIN.getCode(), Status.S_USER_LOGIN.getMsg());
+        String data = response.getHeader("Authorization");
+        Result result = resultService.getSuccessDataResult(Status.S_USER_LOGIN.getCode(), Status.S_USER_LOGIN.getMsg(), data);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(result);
     }
 
