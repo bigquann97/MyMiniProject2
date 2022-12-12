@@ -40,14 +40,3 @@ public class SignUpReq {
         this.loginPw = encodedPw;
     }
 }
-
-/*
-{
-    "userId": "sparta123",
-    "userPw": "sparta123",
-    "userPwAgain": "sparta123",
-    "name": "김관호",
-    "email": "sparta@naver.com",
-    "age" : 26
-}
- */

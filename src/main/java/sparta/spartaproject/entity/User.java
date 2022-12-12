@@ -39,6 +39,9 @@ public class User extends TimeStamped {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
+
     public static User of(SignUpReq signUpReq) {
         return User.builder()
                 .loginId(signUpReq.getLoginId())
@@ -59,4 +62,12 @@ public class User extends TimeStamped {
         return false;
     }
 
+    public boolean hasThisComment(Comment targetComment) {
+        for (Comment comment : this.comments) {
+            if (comment.equals(targetComment)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
