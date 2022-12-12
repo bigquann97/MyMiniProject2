@@ -9,6 +9,7 @@ import sparta.spartaproject.dto.CommentRes;
 import sparta.spartaproject.service.CommentService;
 import sparta.spartaproject.service.ResultService;
 import sparta.spartaproject.service.result.Result;
+import sparta.spartaproject.service.result.Status;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,26 +21,24 @@ public class CommentController {
     private final CommentService commentService;
     private final ResultService resultService;
 
-    // 댓글 작성
     @PostMapping("/{postId}")
     public ResponseEntity<Result> writeComment(@PathVariable Long postId, @RequestBody CommentReq commentReq, HttpServletRequest request) {
         CommentRes commentRes = commentService.writeComment(postId, commentReq, request);
-        Result result = resultService.getSuccessDataResult(150, "댓글작성", commentRes);
+        Result result = resultService.getSuccessDataResult(Status.S_COMMENT_UPLOAD.getCode(), Status.S_COMMENT_UPLOAD.getMsg(), commentRes);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    // 댓글 삭제
     @DeleteMapping("/{postId}/{commentId}")
     public ResponseEntity<Result> deleteComment(@PathVariable Long postId, @PathVariable Long commentId, HttpServletRequest request) {
         commentService.deleteComment(postId, commentId, request);
-        Result result = resultService.getSuccessResult(150, "댓글 삭제");
+        Result result = resultService.getSuccessResult(Status.S_COMMENT_DELETE.getCode(), Status.S_COMMENT_DELETE.getMsg());
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @PutMapping("/{postId}/{commentId}")
     public ResponseEntity<Result> modifyComment(@PathVariable Long postId, @PathVariable Long commentId, HttpServletRequest request, @RequestBody CommentReq commentReq) {
         CommentRes commentRes = commentService.modifyComment(postId, commentId, request, commentReq);
-        Result result = resultService.getSuccessDataResult(150, "댓글 수정", commentRes);
+        Result result = resultService.getSuccessDataResult(Status.S_COMMENT_MODIFY.getCode(), Status.S_COMMENT_MODIFY.getMsg(), commentRes);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

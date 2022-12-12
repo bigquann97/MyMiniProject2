@@ -24,6 +24,9 @@ jwt:
   secret:
     key: 7ZWt7ZW0OTntmZTsnbTtjIXtlZzqta3snYTrhIjrqLjshLjqs4TroZzrgpjslYTqsIDsnpDtm4zrpa3tlZzqsJzrsJzsnpDrpbzrp4zrk6TslrTqsIDsnpA=
 
+login:
+  admin-key: makeMeAdmin
+
 
 #jdbc:h2:mem:db;MODE=MYSQL;
 #jdbc:h2:tcp://localhost/~/dbs/sparta

@@ -65,7 +65,8 @@ public class PostService {
             }
             User findUser = userRepository.findUserByLoginId(claims.getSubject()).orElseThrow(NotExistUserException::new);
             Post findPost = postRepository.findById(id).orElseThrow(NotExistPostException::new);
-            if (findUser.hasThisPost(findPost)) {
+
+            if (findUser.isAdmin() || findUser.hasPost(findPost)) {
                 postRepository.delete(findPost);
             } else {
                 throw new UnauthorizedException();
@@ -87,7 +88,7 @@ public class PostService {
             User findUser = userRepository.findUserByLoginId(claims.getSubject()).orElseThrow(NotExistUserException::new);
             Post findPost = postRepository.findById(id).orElseThrow(NotExistPostException::new);
 
-            if (findUser.hasThisPost(findPost)) {
+            if (findUser.hasPost(findPost)) {
                 findPost.editPost(postReq);
                 postRepository.saveAndFlush(findPost);
                 return PostRes.of(findPost);

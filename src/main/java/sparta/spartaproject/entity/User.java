@@ -2,6 +2,7 @@ package sparta.spartaproject.entity;
 
 import lombok.*;
 import sparta.spartaproject.dto.SignUpReq;
+import sparta.spartaproject.exception.AdminKeyNotMatchException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -43,6 +44,18 @@ public class User extends TimeStamped {
     private List<Comment> comments = new ArrayList<>();
 
     public static User of(SignUpReq signUpReq) {
+        if (signUpReq.isWantAdmin() && signUpReq.checkAdminKey()) {
+            return User.builder()
+                    .loginId(signUpReq.getLoginId())
+                    .loginPw(signUpReq.getLoginPw())
+                    .age(signUpReq.getAge())
+                    .email(signUpReq.getEmail())
+                    .name(signUpReq.getName())
+                    .role(UserRole.ADMIN)
+                    .build();
+        } else if (signUpReq.isWantAdmin() && !signUpReq.checkAdminKey()) {
+            throw new AdminKeyNotMatchException();
+        }
         return User.builder()
                 .loginId(signUpReq.getLoginId())
                 .loginPw(signUpReq.getLoginPw())
@@ -53,21 +66,15 @@ public class User extends TimeStamped {
                 .build();
     }
 
-    public boolean hasThisPost(Post findPost) {
-        for (Post post : posts) {
-            if (post.equals(findPost)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean hasPost(Post findPost) {
+        return posts.stream().anyMatch(x -> x.equals(findPost));
     }
 
-    public boolean hasThisComment(Comment targetComment) {
-        for (Comment comment : this.comments) {
-            if (comment.equals(targetComment)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean hasComment(Comment targetComment) {
+        return comments.stream().anyMatch(x -> x.equals(targetComment));
+    }
+
+    public boolean isAdmin() {
+        return this.role.equals(UserRole.ADMIN);
     }
 }

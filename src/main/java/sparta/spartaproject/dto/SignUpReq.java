@@ -1,5 +1,6 @@
 package sparta.spartaproject.dto;
 
+import com.sun.istack.Nullable;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -32,11 +33,19 @@ public class SignUpReq {
     @Max(value = 130, message = "1 ~ 130 사이 숫자를 입력해주세요.")
     private Integer age;
 
+    private boolean wantAdmin;
+
+    private String adminKey;
+
     public boolean validatePw() {
         return this.loginPw.equals(loginPwAgain);
     }
 
     public void changePw(String encodedPw) {
         this.loginPw = encodedPw;
+    }
+
+    public boolean checkAdminKey() {
+        return this.adminKey.equals("makeMeAdmin");
     }
 }

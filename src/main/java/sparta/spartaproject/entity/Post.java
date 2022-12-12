@@ -19,7 +19,6 @@ public class Post extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
     private String title;
 
     @Lob
@@ -29,8 +28,10 @@ public class Post extends TimeStamped {
     @JoinColumn(name = "users_id")
     private User user;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @OrderBy("id asc") // 댓글 정렬
+    @OneToMany(mappedBy = "post",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE)
+    @OrderBy("id asc")
     private List<Comment> comments = new ArrayList<>();
 
     public static Post of(PostReq uploadPostReq, User user) {
@@ -46,12 +47,8 @@ public class Post extends TimeStamped {
         this.content = postReq.getContent();
     }
 
-    public boolean hashThisComment(Comment targetComment) {
-        for (Comment comment : comments) {
-            if (comment.equals(targetComment)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean hasComment(Comment targetComment) {
+        return comments.stream().anyMatch(x -> x.equals(targetComment));
     }
+
 }

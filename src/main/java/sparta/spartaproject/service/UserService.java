@@ -25,7 +25,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional(readOnly = false)
+    @Transactional
     public SignupRes signup(SignUpReq signUpReq) {
         Optional<User> findUser = userRepository.findUserByLoginId(signUpReq.getLoginId());
         if (findUser.isPresent())
@@ -33,17 +33,15 @@ public class UserService {
         String encodedPw = passwordEncoder.encode(signUpReq.getLoginPw());
         signUpReq.changePw(encodedPw);
         User signupUser = User.of(signUpReq);
-        User savedUser = userRepository.save(signupUser);
-        return SignupRes.of(savedUser);
+        return SignupRes.of(userRepository.save(signupUser));
     }
 
     @Transactional(readOnly = true)
     public void login(LoginReq loginReq, HttpServletResponse response) {
         Optional<User> findUser = userRepository.findUserByLoginId(loginReq.getLoginId());
         User loginUser = findUser.orElseThrow(NotExistUserException::new);
-        if(! passwordEncoder.matches(loginReq.getLoginPw(), loginUser.getLoginPw())) {
+        if(! passwordEncoder.matches(loginReq.getLoginPw(), loginUser.getLoginPw()))
             throw new WrongPwException();
-        }
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginUser.getLoginId(), loginUser.getRole()));
     }
 }

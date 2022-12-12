@@ -28,13 +28,12 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<Result> signup(@RequestBody @Valid SignUpReq signUpReq) {
-        Result result;
         if (signUpReq.validatePw()) {
             SignupRes resultData = userService.signup(signUpReq);
-            result = resultService.getSuccessDataResult(Status.S_USER_CREATED.getCode(), Status.S_USER_CREATED.getMsg(), resultData);
+            Result result = resultService.getSuccessDataResult(Status.S_USER_CREATED.getCode(), Status.S_USER_CREATED.getMsg(), resultData);
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } else {
-            result = resultService.getFailureResult(Status.F_USER_INVALID_PW.getCode(), Status.F_USER_INVALID_PW.getMsg());
+            Result result = resultService.getFailureResult(Status.F_USER_INVALID_PW.getCode(), Status.F_USER_INVALID_PW.getMsg());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         }
     }

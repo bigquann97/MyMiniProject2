@@ -9,9 +9,7 @@ import sparta.spartaproject.dto.CommentRes;
 import sparta.spartaproject.entity.Comment;
 import sparta.spartaproject.entity.Post;
 import sparta.spartaproject.entity.User;
-import sparta.spartaproject.exception.InvalidTokenException;
-import sparta.spartaproject.exception.NotExistPostException;
-import sparta.spartaproject.exception.NotExistUserException;
+import sparta.spartaproject.exception.*;
 import sparta.spartaproject.jwt.JwtUtil;
 import sparta.spartaproject.repository.CommentRepository;
 import sparta.spartaproject.repository.PostRepository;
@@ -28,57 +26,45 @@ public class CommentService {
     private final PostRepository postRepository;
     private final JwtUtil jwtUtil;
 
+    @Transactional
     public CommentRes writeComment(Long postId, CommentReq commentReq, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
-
         if(token != null) {
-            if (jwtUtil.validateToken(token)) {
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new InvalidTokenException();
-            }
+            if (jwtUtil.validateToken(token)) claims = jwtUtil.getUserInfoFromToken(token);
+            else throw new InvalidTokenException();
+
             String loginId = claims.getSubject();
             Post post = postRepository.findById(postId).orElseThrow(NotExistPostException::new);
             User user = userRepository.findUserByLoginId(loginId).orElseThrow(NotExistUserException::new);
             Comment comment = Comment.of(commentReq, post, user);
+
             commentRepository.save(comment);
-            userRepository.flush();
-            postRepository.flush();
             return CommentRes.of(comment);
-        } else {
-            throw new InvalidTokenException();
         }
-
-
-
+        throw new InvalidTokenException();
     }
 
+    @Transactional
     public void deleteComment(Long postId, Long commentId, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
         if(token != null) {
-            if (jwtUtil.validateToken(token)) {
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new InvalidTokenException();
-            }
-            String loginId = claims.getSubject();
+            if (jwtUtil.validateToken(token)) claims = jwtUtil.getUserInfoFromToken(token);
+            else throw new InvalidTokenException();
 
-            Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalStateException("댓글 없음"));
+            String loginId = claims.getSubject();
+            Comment comment = commentRepository.findById(commentId).orElseThrow(NotExistCommentException::new);
             User user = userRepository.findUserByLoginId(loginId).orElseThrow(NotExistUserException::new);
             Post post = postRepository.findById(postId).orElseThrow(NotExistPostException::new);
 
-            if(user.hasThisComment(comment) && post.hashThisComment(comment)){
-                commentRepository.deleteById(commentId);
-            } else {
-                throw new IllegalArgumentException();
-            }
-        } else {
-            throw new InvalidTokenException();
+            System.out.println(user.getComments().size());
+
+            if (post.hasComment(comment) && (user.isAdmin() || user.hasComment(comment)))
+                commentRepository.delete(comment);
+            return;
         }
-
-
+        throw new InvalidTokenException();
     }
 
     @Transactional
@@ -86,25 +72,20 @@ public class CommentService {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
         if(token != null) {
-            if (jwtUtil.validateToken(token)) {
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new InvalidTokenException();
-            }
-            String loginId = claims.getSubject();
+            if (jwtUtil.validateToken(token)) claims = jwtUtil.getUserInfoFromToken(token);
+            else throw new InvalidTokenException();
 
-            Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalStateException("댓글 없음"));
+            String loginId = claims.getSubject();
+            Comment comment = commentRepository.findById(commentId).orElseThrow(NotExistCommentException::new);
             User user = userRepository.findUserByLoginId(loginId).orElseThrow(NotExistUserException::new);
             Post post = postRepository.findById(postId).orElseThrow(NotExistPostException::new);
 
-            if(user.hasThisComment(comment) && post.hashThisComment(comment)){
+            if(user.hasComment(comment) && post.hasComment(comment)){
                 comment.editComment(commentReq);
                 commentRepository.saveAndFlush(comment);
                 return CommentRes.of(comment);
             }
-        } else {
-            throw new InvalidTokenException();
         }
-        return null;
+        throw new InvalidTokenException();
     }
 }

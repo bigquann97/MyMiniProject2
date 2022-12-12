@@ -11,6 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends TimeStamped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,4 +37,5 @@ public class Comment extends TimeStamped {
     public void editComment(CommentReq commentReq) {
         this.content = commentReq.getContent();
     }
+
 }

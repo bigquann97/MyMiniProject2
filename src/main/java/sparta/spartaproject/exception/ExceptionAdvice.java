@@ -78,4 +78,18 @@ public class ExceptionAdvice {
         return resultService.getFailureResult(Status.F_UNAUTHORIZED.getCode(), Status.F_UNAUTHORIZED.getMsg());
     }
 
+    @ExceptionHandler(AdminKeyNotMatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result adminKeyNotMatchException() {
+        return resultService.getFailureResult(Status.F_ADMIN_KEY_NOT_MATCH.getCode(), Status.F_ADMIN_KEY_NOT_MATCH.getMsg());
+    }
+
+    @ExceptionHandler(NotExistCommentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result notExistCommentException() {
+        return resultService.getFailureResult(Status.F_COMMENT_NOT_EXIST.getCode(), Status.F_COMMENT_NOT_EXIST.getMsg());
+    }
+
+
+
 }
