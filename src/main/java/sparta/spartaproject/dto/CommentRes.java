@@ -2,7 +2,7 @@ package sparta.spartaproject.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import sparta.spartaproject.entity.Comment;
+import sparta.spartaproject.entity.comment.Comment;
 
 import java.time.LocalDateTime;
 

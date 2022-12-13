@@ -2,7 +2,7 @@ package sparta.spartaproject.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import sparta.spartaproject.entity.User;
+import sparta.spartaproject.entity.user.User;
 
 @Builder
 @Getter
