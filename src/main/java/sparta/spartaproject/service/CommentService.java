@@ -58,8 +58,6 @@ public class CommentService {
             User user = userRepository.findUserByLoginId(loginId).orElseThrow(NotExistUserException::new);
             Post post = postRepository.findById(postId).orElseThrow(NotExistPostException::new);
 
-            System.out.println(user.getComments().size());
-
             if (post.hasComment(comment) && (user.isAdmin() || user.hasComment(comment)))
                 commentRepository.delete(comment);
             return;

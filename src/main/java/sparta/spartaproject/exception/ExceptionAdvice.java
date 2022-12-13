@@ -63,13 +63,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Result methodArgumentNotValidException(MethodArgumentNotValidException e) {
-        FieldError error = e.getBindingResult().getFieldError();
-        assert error != null;
-        String defaultMessage = error.getDefaultMessage();
-        String field = error.getField();
-        Object rejectedValue = error.getRejectedValue();
-        String msg = "잘못된 " + field + " 값: " + defaultMessage + " - " + "입력한 값 : " + rejectedValue;
-        return resultService.getFailureResult(Status.F_ILLEGAL_ARGUMENT.getCode(), msg);
+        return resultService.getFailureResult(Status.F_ILLEGAL_ARGUMENT.getCode(), Status.F_ILLEGAL_ARGUMENT.getMsg());
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -89,7 +83,5 @@ public class ExceptionAdvice {
     public Result notExistCommentException() {
         return resultService.getFailureResult(Status.F_COMMENT_NOT_EXIST.getCode(), Status.F_COMMENT_NOT_EXIST.getMsg());
     }
-
-
-
+    
 }
