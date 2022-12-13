@@ -1,18 +1,22 @@
 package sparta.spartaproject.controller.comment;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import sparta.spartaproject.dto.CommentReq;
-import sparta.spartaproject.dto.CommentRes;
+import sparta.spartaproject.dto.comment.CommentDto;
+import sparta.spartaproject.entity.user.User;
+import sparta.spartaproject.exception.NotExistUserException;
+import sparta.spartaproject.repository.user.UserRepository;
 import sparta.spartaproject.service.comment.CommentService;
 import sparta.spartaproject.service.result.ResultService;
 import sparta.spartaproject.result.Result;
 import sparta.spartaproject.result.Status;
 
-import javax.servlet.http.HttpServletRequest;
-
+@Api(value = "댓글", tags = "댓글")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/comment")
@@ -20,26 +24,40 @@ public class CommentController {
 
     private final CommentService commentService;
     private final ResultService resultService;
+    private final UserRepository userRepository;
 
+    @ApiOperation(value = "댓글 작성", notes = "댓글을 작성합니다.")
     @PostMapping("/{postId}")
-    public ResponseEntity<Result> writeComment(@PathVariable Long postId, @RequestBody CommentReq commentReq, HttpServletRequest request) {
-        CommentRes commentRes = commentService.writeComment(postId, commentReq, request);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Result writeComment(@PathVariable Long postId, @RequestBody CommentDto.CommentReq commentReq) {
+        User user = getPrincipal();
+        CommentDto.CommentRes commentRes = commentService.writeComment(postId, commentReq, user);
         Result result = resultService.getSuccessDataResult(Status.S_COMMENT_UPLOAD.getCode(), Status.S_COMMENT_UPLOAD.getMsg(), commentRes);
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        return result;
     }
 
+    @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제합니다.")
     @DeleteMapping("/{postId}/{commentId}")
-    public ResponseEntity<Result> deleteComment(@PathVariable Long postId, @PathVariable Long commentId, HttpServletRequest request) {
-        commentService.deleteComment(postId, commentId, request);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Result deleteComment(@PathVariable Long postId, @PathVariable Long commentId) {
+        User user = getPrincipal();
+        commentService.deleteComment(postId, commentId, user);
         Result result = resultService.getSuccessResult(Status.S_COMMENT_DELETE.getCode(), Status.S_COMMENT_DELETE.getMsg());
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return result;
     }
 
+    @ApiOperation(value = "댓글 수정", notes = "댓글을 수정합니다.")
     @PutMapping("/{postId}/{commentId}")
-    public ResponseEntity<Result> modifyComment(@PathVariable Long postId, @PathVariable Long commentId, HttpServletRequest request, @RequestBody CommentReq commentReq) {
-        CommentRes commentRes = commentService.modifyComment(postId, commentId, request, commentReq);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Result modifyComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentDto.CommentReq commentReq) {
+        User user = getPrincipal();
+        CommentDto.CommentRes commentRes = commentService.modifyComment(postId, commentId, commentReq, user);
         Result result = resultService.getSuccessDataResult(Status.S_COMMENT_MODIFY.getCode(), Status.S_COMMENT_MODIFY.getMsg(), commentRes);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return result;
     }
 
+    private User getPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.findUserByLoginId(authentication.getName()).orElseThrow(NotExistUserException::new);
+    }
 }

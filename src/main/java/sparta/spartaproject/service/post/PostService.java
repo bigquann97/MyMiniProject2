@@ -1,89 +1,69 @@
 package sparta.spartaproject.service.post;
 
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import sparta.spartaproject.config.jwt.JwtUtil;
-import sparta.spartaproject.dto.*;
+import org.springframework.transaction.annotation.Transactional;
+import sparta.spartaproject.dto.post.PostDto;
 import sparta.spartaproject.entity.post.Post;
 import sparta.spartaproject.entity.user.User;
-import sparta.spartaproject.exception.InvalidTokenException;
 import sparta.spartaproject.exception.NotExistPostException;
-import sparta.spartaproject.exception.NotExistUserException;
 import sparta.spartaproject.exception.UnauthorizedException;
 import sparta.spartaproject.repository.post.PostRepository;
-import sparta.spartaproject.repository.user.UserRepository;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
-    private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final JwtUtil jwtUtil;
 
-    public PostRes getOnePost(Long id) {
+    @Transactional(readOnly = true)
+    public PostDto.PostRes getOnePost(Long id) {
         Post findPost = postRepository.findById(id).orElseThrow(NotExistPostException::new);
-        return PostRes.of(findPost);
+        return PostDto.PostRes.of(findPost);
     }
 
-    public List<PostRes> getAllPosts() {
+    @Transactional(readOnly = true)
+    public List<PostDto.PostRes> getAllPosts() {
         List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
-        return posts.stream().map(PostRes::of).toList();
+        return posts.stream().map(PostDto.PostRes::of).toList();
     }
 
-    public void uploadPost(PostReq postReq, User user) {
-        Post post = Post.of(postReq, user);
+    @Transactional
+    public void uploadPost(PostDto.PostReq postReq, User user) {
+        Post post = PostDto.PostReq.toEntity(postReq, user);
         postRepository.save(post);
     }
 
-
-    public void deletePost(Long id, HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-        if(token != null) {
-            if (jwtUtil.validateToken(token)) {
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new InvalidTokenException();
-            }
-            User findUser = userRepository.findUserByLoginId(claims.getSubject()).orElseThrow(NotExistUserException::new);
-            Post findPost = postRepository.findById(id).orElseThrow(NotExistPostException::new);
-
-            if (findUser.isAdmin() || findUser.hasPost(findPost)) {
-                postRepository.delete(findPost);
-            } else {
-                throw new UnauthorizedException();
-            }
-        } else {
-            throw new InvalidTokenException();
-        }
+    @Transactional
+    public PostDto.PostRes modifyPost(Long id, PostDto.PostReq postReq, User user) {
+        Post findPost = postRepository.findById(id).orElseThrow(NotExistPostException::new);
+        validateAction(user, findPost);
+        findPost.editPost(postReq);
+        postRepository.saveAndFlush(findPost);
+        return PostDto.PostRes.of(findPost);
     }
 
-    public PostRes modifyPost(Long id, PostReq postReq, HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-        if(token != null) {
-            if (jwtUtil.validateToken(token)) {
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new InvalidTokenException();
-            }
-            User findUser = userRepository.findUserByLoginId(claims.getSubject()).orElseThrow(NotExistUserException::new);
-            Post findPost = postRepository.findById(id).orElseThrow(NotExistPostException::new);
+    @Transactional
+    public void deletePost(Long id, User user) {
+        Post findPost = postRepository.findById(id).orElseThrow(NotExistPostException::new);
+        validateAction(user, findPost);
+        postRepository.delete(findPost);
+    }
 
-            if (findUser.hasPost(findPost)) {
-                findPost.editPost(postReq);
-                postRepository.saveAndFlush(findPost);
-                return PostRes.of(findPost);
-            } else {
-                throw new UnauthorizedException();
-            }
-        }
-        throw new InvalidTokenException();
+    private void validateAction(User findUser, Post findPost) {
+        if (!findUser.hasPost(findPost) && !findUser.isAdmin())
+            throw new UnauthorizedException();
+    }
+
+    public List<PostDto.PostSimpleRes> findPagePost(Pageable pageable) {
+        Page<Post> posts = postRepository.findAll(pageable);
+        List<PostDto.PostSimpleRes> data = posts.stream().map(PostDto.PostSimpleRes::of).collect(Collectors.toList());
+        return data;
     }
 }
 

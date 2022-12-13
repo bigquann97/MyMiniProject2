@@ -1,4 +1,4 @@
-package sparta.spartaproject.dto;
+package sparta.spartaproject.dto.user;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -67,11 +67,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/api/user/signup", "/api/user/login", "/api/reissue").permitAll()
 
-                .antMatchers(HttpMethod.GET, "/api/post/{id}").access("hasRole('USER') or hasRole('ADMIN')")
-                .antMatchers(HttpMethod.GET, "/api/post").access("hasRole('USER') or hasRole('ADMIN')")
-                .antMatchers(HttpMethod.POST, "/api/post").access("hasRole('USER') or hasRole('ADMIN')")
-                .antMatchers(HttpMethod.PUT, "/api/post/{id}").access("hasRole('USER') or hasRole('ADMIN')")
-                .antMatchers(HttpMethod.DELETE, "/api/post/{id}").access("hasRole('USER') or hasRole('ADMIN')")
+                .antMatchers(HttpMethod.GET, "/api/post/{id}").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.GET, "/api/post").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.POST, "/api/post").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.PUT, "/api/post/{id}").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.DELETE, "/api/post/{id}").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.GET, "/api/post/temp").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 
                 .antMatchers(HttpMethod.POST, "/api/comment/{postId}").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .antMatchers(HttpMethod.DELETE, "/api/comment/{postId}/{commentId}").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
@@ -101,6 +102,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
-
-
  */

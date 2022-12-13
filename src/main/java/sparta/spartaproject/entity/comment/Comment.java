@@ -1,7 +1,7 @@
 package sparta.spartaproject.entity.comment;
 
 import lombok.*;
-import sparta.spartaproject.dto.CommentReq;
+import sparta.spartaproject.dto.comment.CommentDto;
 import sparta.spartaproject.entity.post.Post;
 import sparta.spartaproject.entity.common.TimeStamped;
 import sparta.spartaproject.entity.user.User;
@@ -29,16 +29,7 @@ public class Comment extends TimeStamped {
     @JoinColumn(name = "posts_id")
     private Post post;
 
-    public static Comment of(CommentReq commentReq, Post post, User user) {
-        return Comment.builder()
-                .content(commentReq.getContent())
-                .user(user)
-                .post(post)
-                .build();
-    }
-
-    public void editComment(CommentReq commentReq) {
+    public void editComment(CommentDto.CommentReq commentReq) {
         this.content = commentReq.getContent();
     }
-
 }

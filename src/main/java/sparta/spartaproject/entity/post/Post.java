@@ -1,7 +1,7 @@
 package sparta.spartaproject.entity.post;
 
 import lombok.*;
-import sparta.spartaproject.dto.PostReq;
+import sparta.spartaproject.dto.post.PostDto;
 import sparta.spartaproject.entity.common.TimeStamped;
 import sparta.spartaproject.entity.user.User;
 import sparta.spartaproject.entity.comment.Comment;
@@ -37,15 +37,7 @@ public class Post extends TimeStamped {
     @OrderBy("id asc")
     private List<Comment> comments = new ArrayList<>();
 
-    public static Post of(PostReq uploadPostReq, User user) {
-        return Post.builder()
-                .title(uploadPostReq.getTitle())
-                .content(uploadPostReq.getContent())
-                .user(user)
-                .build();
-    }
-
-    public void editPost(PostReq postReq) {
+    public void editPost(PostDto.PostReq postReq) {
         this.title = postReq.getTitle();
         this.content = postReq.getContent();
     }
@@ -53,5 +45,4 @@ public class Post extends TimeStamped {
     public boolean hasComment(Comment targetComment) {
         return comments.stream().anyMatch(x -> x.equals(targetComment));
     }
-
 }

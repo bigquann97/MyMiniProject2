@@ -1,8 +1,6 @@
-package sparta.spartaproject.dto;
+package sparta.spartaproject.dto.user;
 
-import com.sun.istack.Nullable;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import lombok.Builder;
 import lombok.Getter;
 

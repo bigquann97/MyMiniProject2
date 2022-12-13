@@ -8,7 +8,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sparta.spartaproject.config.jwt.TokenProvider;
-import sparta.spartaproject.dto.*;
+import sparta.spartaproject.dto.token.TokenDto;
+import sparta.spartaproject.dto.token.TokenRes;
+import sparta.spartaproject.dto.user.LoginReq;
+import sparta.spartaproject.dto.user.SignUpReq;
+import sparta.spartaproject.dto.user.SignupRes;
 import sparta.spartaproject.entity.user.RefreshToken;
 import sparta.spartaproject.entity.user.User;
 import sparta.spartaproject.exception.AlreadyExistUserException;
@@ -60,8 +64,6 @@ public class UserService {
         if (!signUpReq.validatePw())
             throw new WrongPwException();
         else if (userRepository.existsByLoginId(signUpReq.getLoginId()))
-            throw new AlreadyExistUserException();
-        else if (userRepository.existsByEmail(signUpReq.getEmail()))
             throw new AlreadyExistUserException();
     }
 

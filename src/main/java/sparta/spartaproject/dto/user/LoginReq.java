@@ -1,4 +1,4 @@
-package sparta.spartaproject.dto;
+package sparta.spartaproject.dto.user;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package sparta.spartaproject.dto;
+package sparta.spartaproject.dto.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
