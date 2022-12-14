@@ -1,5 +1,6 @@
 package sparta.spartaproject.dto.post;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 import sparta.spartaproject.dto.comment.CommentDto;
@@ -13,7 +14,10 @@ public class PostDto {
 
     @Getter
     public static class PostReq {
+        @ApiModelProperty(value = "제목", notes = "제목을 입력해주세요", required = true, example = "제목")
         private String title;
+
+        @ApiModelProperty(value = "내용", notes = "내용을 입력해주세요", required = true, example = "내용")
         private String content;
 
         public static Post toEntity(PostDto.PostReq req, User user) {
@@ -23,7 +27,6 @@ public class PostDto {
                     .user(user)
                     .build();
         }
-
     }
 
     @Getter
@@ -56,7 +59,6 @@ public class PostDto {
     public static class PostSimpleRes {
         private Long id;
         private String title;
-
         public static PostSimpleRes of(Post post) {
             return PostSimpleRes.builder()
                     .id(post.getId())
