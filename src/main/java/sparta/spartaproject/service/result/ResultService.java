@@ -2,35 +2,39 @@ package sparta.spartaproject.service.result;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sparta.spartaproject.dto.post.PostDto;
 import sparta.spartaproject.result.Result;
 import sparta.spartaproject.result.DataResult;
+import sparta.spartaproject.result.Status;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
 public class ResultService {
 
-    public <T> Result getSuccessDataResult(int code, String msg, T data) {
-        return DataResult.builder()
+    public Result getSuccessResult(Status status) {
+        return Result.baseBuilder()
                 .success(true)
-                .message(msg)
-                .statusCode(code)
-                .data(data)
+                .message(status.getMsg())
+                .statusCode(status.getCode())
                 .build();
     }
 
-    public Result getFailureResult(int code, String msg) {
+    public Result getFailureResult(Status status) {
         return Result.baseBuilder()
                 .success(false)
-                .message(msg)
-                .statusCode(code)
+                .message(status.getMsg())
+                .statusCode(status.getCode())
                 .build();
     }
 
-    public Result getSuccessResult(int code, String msg) {
-        return Result.baseBuilder()
+    public <T> Result getSuccessDataResult(Status status, T data) {
+        return DataResult.builder()
                 .success(true)
-                .message(msg)
-                .statusCode(code)
+                .message(status.getMsg())
+                .statusCode(status.getCode())
+                .data(data)
                 .build();
     }
 }

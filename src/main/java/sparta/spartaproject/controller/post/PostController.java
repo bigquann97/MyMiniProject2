@@ -36,8 +36,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public Result getOnePost(@PathVariable Long id) {
         PostDto.PostRes post = postService.getOnePost(id);
-        Result result = resultService.getSuccessDataResult(Status.S_POST_VIEW.getCode(), Status.S_POST_VIEW.getMsg(), post);
-        return result;
+        return resultService.getSuccessDataResult(Status.S_POST_VIEW, post);
     }
 
     @ApiOperation(value = "게시글 전체 조회", notes = "전체 게시글을 조회합니다.")
@@ -45,8 +44,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public Result getAllPosts() {
         List<PostDto.PostRes> posts = postService.getAllPosts();
-        Result result = resultService.getSuccessDataResult(Status.S_POST_VIEW.getCode(), Status.S_POST_VIEW.getMsg(), posts);
-        return result;
+        return resultService.getSuccessDataResult(Status.S_POST_VIEW, posts);
     }
 
     @ApiOperation(value = "게시글 작성", notes = "게시글을 작성합니다.")
@@ -55,8 +53,7 @@ public class PostController {
     public Result uploadPost(@RequestBody PostDto.PostReq postReq) {
         User user = getPrincipal();
         postService.uploadPost(postReq, user);
-        Result result = resultService.getSuccessResult(Status.S_POST_UPLOAD.getCode(), Status.S_POST_UPLOAD.getMsg());
-        return result;
+        return resultService.getSuccessResult(Status.S_POST_UPLOAD);
     }
 
     @ApiOperation(value = "게시글 수정", notes = "게시글을 삭제합니다.")
@@ -65,8 +62,7 @@ public class PostController {
     public Result modifyPost(@PathVariable Long id, @RequestBody PostDto.PostReq postReq) {
         User user = getPrincipal();
         PostDto.PostRes modifiedPost = postService.modifyPost(id, postReq, user);
-        Result result = resultService.getSuccessDataResult(Status.S_POST_MODIFY.getCode(), Status.S_POST_MODIFY.getMsg(), modifiedPost);
-        return result;
+        return resultService.getSuccessDataResult(Status.S_POST_MODIFY, modifiedPost);
     }
 
     @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제합니다.")
@@ -75,17 +71,18 @@ public class PostController {
     public Result deletePost(@PathVariable Long id) {
         User user = getPrincipal();
         postService.deletePost(id, user);
-        Result result = resultService.getSuccessResult(Status.S_POST_DELETE.getCode(), Status.S_POST_DELETE.getMsg());
-        return result;
+        return resultService.getSuccessResult(Status.S_POST_DELETE);
     }
 
     @ApiOperation(value = "게시글 페이징 조회", notes = "게시글을 페이징 조회합니다.")
-    @GetMapping("/temp")
+    @GetMapping("/page")
     @ResponseStatus(HttpStatus.OK)
-    public Result showPagePost(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Result showPagePost(
+            @PageableDefault(size = 5,
+                    sort = "id",
+                    direction = Sort.Direction.DESC) Pageable pageable) {
         List<PostDto.PostSimpleRes> pagePost = postService.findPagePost(pageable);
-        Result result = resultService.getSuccessDataResult(100, "성공", pagePost);
-        return result;
+        return resultService.getSuccessDataResult(Status.S_POST_VIEW, pagePost);
     }
 
     private User getPrincipal() {

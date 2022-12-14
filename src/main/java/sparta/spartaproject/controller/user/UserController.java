@@ -27,9 +27,8 @@ public class UserController {
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public Result signup(@RequestBody @Valid UserDto.SignUpReq signUpReq) {
-        UserDto.SignupRes resultData = userService.signup(signUpReq);
-        Result result = resultService.getSuccessDataResult(Status.S_USER_CREATED.getCode(), Status.S_USER_CREATED.getMsg(), resultData);
-        return result;
+        UserDto.SignupRes data = userService.signup(signUpReq);
+        return resultService.getSuccessDataResult(Status.S_USER_CREATED, data);
     }
 
     @ApiOperation(value = "로그인", notes = "로그인")
@@ -37,8 +36,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public Result login(@RequestBody UserDto.LoginReq loginReq) {
         TokenDto.TokenRes data = userService.login(loginReq);
-        Result result = resultService.getSuccessDataResult(Status.S_USER_LOGIN.getCode(), Status.S_USER_LOGIN.getMsg(), data);
-        return result;
+        return resultService.getSuccessDataResult(Status.S_USER_LOGIN, data);
     }
 
 }

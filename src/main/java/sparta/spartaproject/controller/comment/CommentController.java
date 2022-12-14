@@ -32,28 +32,25 @@ public class CommentController {
     public Result writeComment(@PathVariable Long postId, @RequestBody CommentDto.CommentReq commentReq) {
         User user = getPrincipal();
         CommentDto.CommentRes commentRes = commentService.writeComment(postId, commentReq, user);
-        Result result = resultService.getSuccessDataResult(Status.S_COMMENT_UPLOAD.getCode(), Status.S_COMMENT_UPLOAD.getMsg(), commentRes);
-        return result;
+        return resultService.getSuccessDataResult(Status.S_COMMENT_UPLOAD, commentRes);
     }
 
     @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제합니다.")
     @DeleteMapping("/{postId}/{commentId}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public Result deleteComment(@PathVariable Long postId, @PathVariable Long commentId) {
         User user = getPrincipal();
         commentService.deleteComment(postId, commentId, user);
-        Result result = resultService.getSuccessResult(Status.S_COMMENT_DELETE.getCode(), Status.S_COMMENT_DELETE.getMsg());
-        return result;
+        return resultService.getSuccessResult(Status.S_COMMENT_DELETE);
     }
 
     @ApiOperation(value = "댓글 수정", notes = "댓글을 수정합니다.")
     @PutMapping("/{postId}/{commentId}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public Result modifyComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentDto.CommentReq commentReq) {
         User user = getPrincipal();
         CommentDto.CommentRes commentRes = commentService.modifyComment(postId, commentId, commentReq, user);
-        Result result = resultService.getSuccessDataResult(Status.S_COMMENT_MODIFY.getCode(), Status.S_COMMENT_MODIFY.getMsg(), commentRes);
-        return result;
+        return resultService.getSuccessDataResult(Status.S_COMMENT_MODIFY, commentRes);
     }
 
     private User getPrincipal() {

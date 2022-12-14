@@ -13,6 +13,7 @@ import sparta.spartaproject.entity.user.RefreshToken;
 import sparta.spartaproject.entity.user.User;
 import sparta.spartaproject.exception.AlreadyExistUserException;
 import sparta.spartaproject.exception.NotExistUserException;
+import sparta.spartaproject.exception.PwNotMatchException;
 import sparta.spartaproject.exception.WrongPwException;
 import sparta.spartaproject.repository.refreshToken.RefreshTokenRepository;
 import sparta.spartaproject.repository.user.UserRepository;
@@ -61,7 +62,7 @@ public class UserService {
 
     private void validateSignupReq(SignUpReq signUpReq) {
         if (!signUpReq.validatePw())
-            throw new WrongPwException();
+            throw new PwNotMatchException();
         else if (userRepository.existsByLoginId(signUpReq.getLoginId()))
             throw new AlreadyExistUserException();
     }
@@ -72,15 +73,3 @@ public class UserService {
     }
 
 }
-
-/*
-    @Transactional(readOnly = true)
-    public void login(LoginReq loginReq, HttpServletResponse response) {
-        Optional<User> findUser = userRepository.findUserByLoginId(loginReq.getLoginId());
-        User loginUser = findUser.orElseThrow(NotExistUserException::new);
-        if (!passwordEncoder.matches(loginReq.getLoginPw(), loginUser.getLoginPw()))
-            throw new WrongPwException();
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginUser.getLoginId(), loginUser.getRole()));
-    }
-
- */
