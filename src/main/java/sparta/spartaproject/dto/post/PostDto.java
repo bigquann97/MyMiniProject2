@@ -51,7 +51,6 @@ public class PostDto {
                     .comments(comments)
                     .build();
         }
-
     }
 
     @Getter

@@ -68,25 +68,3 @@ public class PostService {
     }
 
 }
-
-
-/*
-    public void uploadPost(PostReq postReq, User user) {
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-        if(token != null) {
-            if (jwtUtil.validateToken(token)) {
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new InvalidTokenException();
-            }
-            String loginId = claims.getSubject();
-            User user = userRepository.findUserByLoginId(loginId).orElseThrow(() -> new AccessDeniedException("잘못된 유저"));
-            Post post = Post.of(postReq, user);
-            postRepository.save(post);
-        } else {
-            throw new InvalidTokenException();
-        }
-    }
-
- */

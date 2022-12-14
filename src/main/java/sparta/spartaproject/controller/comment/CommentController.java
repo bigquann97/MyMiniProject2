@@ -57,4 +57,5 @@ public class CommentController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findUserByLoginId(authentication.getName()).orElseThrow(NotExistUserException::new);
     }
+
 }

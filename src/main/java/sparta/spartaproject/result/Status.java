@@ -39,17 +39,3 @@ public enum Status {
     private final int code;
     private final String msg;
 }
-
-
-/*
-    this.code = code;
-
-    private String code;
-
-    public static Status valueOfCode(String errorCode) {
-        return Arrays.stream(values())
-                .filter(value -> value.code.equals(errorCode))
-                .findAny()
-                .orElse(null);
-    }
- */
