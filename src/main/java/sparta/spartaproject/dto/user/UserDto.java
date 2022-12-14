@@ -1,8 +1,10 @@
 package sparta.spartaproject.dto.user;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import sparta.spartaproject.entity.user.User;
 import sparta.spartaproject.entity.user.UserRole;
@@ -33,6 +35,8 @@ public class UserDto {
 
     @Builder
     @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class SignUpReq {
 
         @ApiModelProperty(value = "아이디", notes = "아이디를 입력해주세요", required = true, example = "sparta")
@@ -83,11 +87,11 @@ public class UserDto {
             return this.adminKey.equals("makeMeAdmin");
         }
 
-        public static User toEntity(SignUpReq signUpReq) {
+        public static User toEntity(SignUpReq signUpReq, String encodedPw) {
             if (signUpReq.isWantAdmin() && signUpReq.checkAdminKey()) {
                 return User.builder()
                         .loginId(signUpReq.getLoginId())
-                        .loginPw(signUpReq.getLoginPw())
+                        .loginPw(encodedPw)
                         .age(signUpReq.getAge())
                         .email(signUpReq.getEmail())
                         .name(signUpReq.getName())
@@ -98,7 +102,7 @@ public class UserDto {
             }
             return User.builder()
                     .loginId(signUpReq.getLoginId())
-                    .loginPw(signUpReq.getLoginPw())
+                    .loginPw(encodedPw)
                     .age(signUpReq.getAge())
                     .email(signUpReq.getEmail())
                     .name(signUpReq.getName())
@@ -108,6 +112,9 @@ public class UserDto {
     }
 
     @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class LoginReq {
 
         @ApiModelProperty(value = "아이디", notes = "아이디를 입력해주세요", required = true, example = "sparta")

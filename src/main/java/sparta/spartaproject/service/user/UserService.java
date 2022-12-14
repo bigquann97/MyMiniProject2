@@ -35,8 +35,7 @@ public class UserService {
     public SignupRes signup(SignUpReq signUpReq) {
         validateSignupReq(signUpReq);
         String encodedPw = passwordEncoder.encode(signUpReq.getLoginPw());
-        signUpReq.changePw(encodedPw);
-        User user = SignUpReq.toEntity(signUpReq);
+        User user = SignUpReq.toEntity(signUpReq, encodedPw);
         userRepository.save(user);
         return SignupRes.of(user);
     }
@@ -60,7 +59,7 @@ public class UserService {
         return TokenRes.of(tokenDto);
     }
 
-    private void validateSignupReq(SignUpReq signUpReq) {
+    void validateSignupReq(SignUpReq signUpReq) {
         if (!signUpReq.validatePw())
             throw new PwNotMatchException();
         else if (userRepository.existsByLoginId(signUpReq.getLoginId()))
