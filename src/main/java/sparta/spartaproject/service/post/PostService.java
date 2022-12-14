@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sparta.spartaproject.dto.post.PostDto;
 import sparta.spartaproject.entity.post.Post;
 import sparta.spartaproject.entity.user.User;
 import sparta.spartaproject.exception.NotExistPostException;

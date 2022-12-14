@@ -1,13 +1,7 @@
-package sparta.spartaproject.service.result;
+package sparta.spartaproject.result;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sparta.spartaproject.dto.post.PostDto;
-import sparta.spartaproject.result.Result;
-import sparta.spartaproject.result.DataResult;
-import sparta.spartaproject.result.Status;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)

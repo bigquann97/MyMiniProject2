@@ -11,10 +11,10 @@ import sparta.spartaproject.dto.comment.CommentDto;
 import sparta.spartaproject.entity.user.User;
 import sparta.spartaproject.exception.NotExistUserException;
 import sparta.spartaproject.repository.user.UserRepository;
-import sparta.spartaproject.service.comment.CommentService;
-import sparta.spartaproject.service.result.ResultService;
 import sparta.spartaproject.result.Result;
+import sparta.spartaproject.result.ResultService;
 import sparta.spartaproject.result.Status;
+import sparta.spartaproject.service.comment.CommentService;
 
 @Api(value = "댓글", tags = "댓글")
 @RequiredArgsConstructor

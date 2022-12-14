@@ -3,7 +3,6 @@ package sparta.spartaproject.service.comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sparta.spartaproject.dto.comment.CommentDto;
 import sparta.spartaproject.entity.comment.Comment;
 import sparta.spartaproject.entity.post.Post;
 import sparta.spartaproject.entity.user.User;
@@ -14,7 +13,8 @@ import sparta.spartaproject.exception.UnauthorizedException;
 import sparta.spartaproject.repository.comment.CommentRepository;
 import sparta.spartaproject.repository.post.PostRepository;
 
-import static sparta.spartaproject.dto.comment.CommentDto.*;
+import static sparta.spartaproject.dto.comment.CommentDto.CommentReq;
+import static sparta.spartaproject.dto.comment.CommentDto.CommentRes;
 
 @Service
 @RequiredArgsConstructor

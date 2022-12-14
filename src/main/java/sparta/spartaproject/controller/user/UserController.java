@@ -7,11 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sparta.spartaproject.dto.token.TokenDto;
 import sparta.spartaproject.dto.user.UserDto;
-import sparta.spartaproject.result.DataResult;
-import sparta.spartaproject.service.result.ResultService;
-import sparta.spartaproject.service.user.UserService;
 import sparta.spartaproject.result.Result;
+import sparta.spartaproject.result.ResultService;
 import sparta.spartaproject.result.Status;
+import sparta.spartaproject.service.user.UserService;
 
 import javax.validation.Valid;
 

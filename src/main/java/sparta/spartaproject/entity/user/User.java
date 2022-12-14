@@ -1,11 +1,9 @@
 package sparta.spartaproject.entity.user;
 
 import lombok.*;
-import sparta.spartaproject.dto.user.UserDto;
 import sparta.spartaproject.entity.comment.Comment;
 import sparta.spartaproject.entity.common.TimeStamped;
 import sparta.spartaproject.entity.post.Post;
-import sparta.spartaproject.exception.AdminKeyNotMatchException;
 
 import javax.persistence.*;
 import java.util.ArrayList;

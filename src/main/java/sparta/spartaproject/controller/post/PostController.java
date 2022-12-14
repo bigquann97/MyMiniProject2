@@ -14,10 +14,10 @@ import sparta.spartaproject.dto.post.PostDto;
 import sparta.spartaproject.entity.user.User;
 import sparta.spartaproject.exception.NotExistUserException;
 import sparta.spartaproject.repository.user.UserRepository;
-import sparta.spartaproject.service.post.PostService;
-import sparta.spartaproject.service.result.ResultService;
 import sparta.spartaproject.result.Result;
+import sparta.spartaproject.result.ResultService;
 import sparta.spartaproject.result.Status;
+import sparta.spartaproject.service.post.PostService;
 
 import java.util.List;
 

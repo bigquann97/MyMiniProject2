@@ -2,9 +2,9 @@ package sparta.spartaproject.entity.post;
 
 import lombok.*;
 import sparta.spartaproject.dto.post.PostDto;
+import sparta.spartaproject.entity.comment.Comment;
 import sparta.spartaproject.entity.common.TimeStamped;
 import sparta.spartaproject.entity.user.User;
-import sparta.spartaproject.entity.comment.Comment;
 
 import javax.persistence.*;
 import java.util.ArrayList;

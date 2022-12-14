@@ -18,7 +18,7 @@ import sparta.spartaproject.exception.WrongPwException;
 import sparta.spartaproject.repository.refreshToken.RefreshTokenRepository;
 import sparta.spartaproject.repository.user.UserRepository;
 
-import static sparta.spartaproject.dto.token.TokenDto.*;
+import static sparta.spartaproject.dto.token.TokenDto.TokenRes;
 import static sparta.spartaproject.dto.user.UserDto.*;
 
 @Service
