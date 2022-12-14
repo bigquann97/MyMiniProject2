@@ -14,4 +14,29 @@ public class TokenDto {
     private String accessToken;
     private String refreshToken;
     private Long accessTokenExpiresIn;
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class TokenReq {
+        private String accessToken;
+        private String refreshToken;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class TokenRes {
+        private String accessToken;
+        private String refreshToken;
+
+        public static TokenRes of(TokenDto tokenDto) {
+            return TokenRes.builder()
+                    .accessToken(tokenDto.getAccessToken())
+                    .refreshToken(tokenDto.getRefreshToken())
+                    .build();
+        }
+    }
 }

@@ -9,10 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sparta.spartaproject.config.jwt.TokenProvider;
 import sparta.spartaproject.dto.token.TokenDto;
-import sparta.spartaproject.dto.token.TokenRes;
-import sparta.spartaproject.dto.user.LoginReq;
-import sparta.spartaproject.dto.user.SignUpReq;
-import sparta.spartaproject.dto.user.SignupRes;
 import sparta.spartaproject.entity.user.RefreshToken;
 import sparta.spartaproject.entity.user.User;
 import sparta.spartaproject.exception.AlreadyExistUserException;
@@ -20,6 +16,9 @@ import sparta.spartaproject.exception.NotExistUserException;
 import sparta.spartaproject.exception.WrongPwException;
 import sparta.spartaproject.repository.refreshToken.RefreshTokenRepository;
 import sparta.spartaproject.repository.user.UserRepository;
+
+import static sparta.spartaproject.dto.token.TokenDto.*;
+import static sparta.spartaproject.dto.user.UserDto.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +35,7 @@ public class UserService {
         validateSignupReq(signUpReq);
         String encodedPw = passwordEncoder.encode(signUpReq.getLoginPw());
         signUpReq.changePw(encodedPw);
-        User user = User.of(signUpReq);
+        User user = SignUpReq.toEntity(signUpReq);
         userRepository.save(user);
         return SignupRes.of(user);
     }

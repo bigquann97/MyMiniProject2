@@ -1,7 +1,7 @@
 package sparta.spartaproject.entity.user;
 
 import lombok.*;
-import sparta.spartaproject.dto.user.SignUpReq;
+import sparta.spartaproject.dto.user.UserDto;
 import sparta.spartaproject.entity.comment.Comment;
 import sparta.spartaproject.entity.common.TimeStamped;
 import sparta.spartaproject.entity.post.Post;
@@ -45,29 +45,6 @@ public class User extends TimeStamped {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
-
-    public static User of(SignUpReq signUpReq) {
-        if (signUpReq.isWantAdmin() && signUpReq.checkAdminKey()) {
-            return User.builder()
-                    .loginId(signUpReq.getLoginId())
-                    .loginPw(signUpReq.getLoginPw())
-                    .age(signUpReq.getAge())
-                    .email(signUpReq.getEmail())
-                    .name(signUpReq.getName())
-                    .role(UserRole.ROLE_ADMIN)
-                    .build();
-        } else if (signUpReq.isWantAdmin() && !signUpReq.checkAdminKey()) {
-            throw new AdminKeyNotMatchException();
-        }
-        return User.builder()
-                .loginId(signUpReq.getLoginId())
-                .loginPw(signUpReq.getLoginPw())
-                .age(signUpReq.getAge())
-                .email(signUpReq.getEmail())
-                .name(signUpReq.getName())
-                .role(UserRole.ROLE_USER)
-                .build();
-    }
 
     public boolean hasPost(Post findPost) {
         return posts.stream().anyMatch(x -> x.equals(findPost));
