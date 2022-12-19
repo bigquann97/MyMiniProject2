@@ -37,9 +37,9 @@ public class Post extends TimeStamped {
     @OrderBy("id asc")
     private List<Comment> comments = new ArrayList<>();
 
-    public void editPost(PostDto.PostReq postReq) {
-        this.title = postReq.getTitle();
-        this.content = postReq.getContent();
+    public void editPost(PostDto.PostRequest postRequest) {
+        this.title = postRequest.getTitle();
+        this.content = postRequest.getContent();
     }
 
     public boolean hasComment(Comment targetComment) {

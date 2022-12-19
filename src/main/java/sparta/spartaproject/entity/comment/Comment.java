@@ -29,7 +29,7 @@ public class Comment extends TimeStamped {
     @JoinColumn(name = "posts_id")
     private Post post;
 
-    public void editComment(CommentDto.CommentReq commentReq) {
-        this.content = commentReq.getContent();
+    public void editComment(CommentDto.CommentRequest commentRequest) {
+        this.content = commentRequest.getContent();
     }
 }

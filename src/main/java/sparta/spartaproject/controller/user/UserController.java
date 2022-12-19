@@ -35,7 +35,7 @@ public class UserController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public Result login(@RequestBody UserDto.LoginReq loginReq) {
-        TokenDto.TokenRes data = userService.login(loginReq);
+        TokenDto.TokenResponse data = userService.login(loginReq);
         return resultService.getSuccessDataResult(Status.S_USER_LOGIN, data);
     }
 

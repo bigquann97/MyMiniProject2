@@ -18,7 +18,7 @@ import sparta.spartaproject.exception.WrongPwException;
 import sparta.spartaproject.repository.refreshToken.RefreshTokenRepository;
 import sparta.spartaproject.repository.user.UserRepository;
 
-import static sparta.spartaproject.dto.token.TokenDto.TokenRes;
+import static sparta.spartaproject.dto.token.TokenDto.TokenResponse;
 import static sparta.spartaproject.dto.user.UserDto.*;
 
 @Service
@@ -41,7 +41,7 @@ public class UserService {
     }
 
     @Transactional
-    public TokenRes login(LoginReq loginReq) {
+    public TokenResponse login(LoginReq loginReq) {
         User user = userRepository.findUserByLoginId(loginReq.getLoginId()).orElseThrow(NotExistUserException::new);
         validatePw(user, loginReq);
 
@@ -56,7 +56,7 @@ public class UserService {
                 .build();
 
         refreshTokenRepository.save(refreshToken);
-        return TokenRes.of(tokenDto);
+        return TokenResponse.of(tokenDto);
     }
 
     void validateSignupReq(SignUpReq signUpReq) {

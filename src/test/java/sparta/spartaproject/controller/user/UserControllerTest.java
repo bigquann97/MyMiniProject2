@@ -73,7 +73,7 @@ class UserControllerTest {
     @Test
     void test_2() throws Exception {
         LoginReq req = new LoginReq("temp1234", "temp1234");
-        when(userService.login(any(req.getClass()))).thenReturn(TokenRes.builder().accessToken("at").refreshToken("rt").build());
+        when(userService.login(any(req.getClass()))).thenReturn(TokenResponse.builder().accessToken("at").refreshToken("rt").build());
 
         mockMvc.perform(
                         post("/api/user/login")

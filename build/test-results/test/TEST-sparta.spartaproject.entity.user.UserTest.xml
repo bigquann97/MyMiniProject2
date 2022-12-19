@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="sparta.spartaproject.entity.user.UserTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-12-19T06:44:40" hostname="Gwanhoui-MacBookAir.local" time="0.417">
+  <properties/>
+  <testcase name="1. 비밀번호 암호화 테스트" classname="sparta.spartaproject.entity.user.UserTest" time="0.417"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

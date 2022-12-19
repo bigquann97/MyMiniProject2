@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
 @Entity
 @Getter
 @Table(name = "users")
@@ -54,5 +53,16 @@ public class User extends TimeStamped {
 
     public boolean isAdmin() {
         return this.role.equals(UserRole.ROLE_ADMIN);
+    }
+
+    @Builder
+    public User(Long id, String loginId, String loginPw, String name, String email, Integer age, UserRole role) {
+        this.id = id;
+        this.loginId = loginId;
+        this.loginPw = loginPw;
+        this.name = name;
+        this.email = email;
+        this.age = age;
+        this.role = role;
     }
 }

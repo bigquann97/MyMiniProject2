@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import sparta.spartaproject.dto.comment.CommentDto;
 import sparta.spartaproject.entity.user.User;
 import sparta.spartaproject.exception.NotExistUserException;
 import sparta.spartaproject.repository.user.UserRepository;
@@ -15,6 +14,8 @@ import sparta.spartaproject.result.Result;
 import sparta.spartaproject.result.ResultService;
 import sparta.spartaproject.result.Status;
 import sparta.spartaproject.service.comment.CommentService;
+
+import static sparta.spartaproject.dto.comment.CommentDto.*;
 
 @Api(value = "댓글", tags = "댓글")
 @RequiredArgsConstructor
@@ -29,10 +30,10 @@ public class CommentController {
     @ApiOperation(value = "댓글 작성", notes = "댓글을 작성합니다.")
     @PostMapping("/{postId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Result writeComment(@PathVariable Long postId, @RequestBody CommentDto.CommentReq commentReq) {
+    public Result writeComment(@PathVariable Long postId, @RequestBody CommentRequest commentRequest) {
         User user = getPrincipal();
-        CommentDto.CommentRes commentRes = commentService.writeComment(postId, commentReq, user);
-        return resultService.getSuccessDataResult(Status.S_COMMENT_UPLOAD, commentRes);
+        CommentResponse commentResponse = commentService.writeComment(postId, commentRequest, user);
+        return resultService.getSuccessDataResult(Status.S_COMMENT_UPLOAD, commentResponse);
     }
 
     @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제합니다.")
@@ -47,10 +48,10 @@ public class CommentController {
     @ApiOperation(value = "댓글 수정", notes = "댓글을 수정합니다.")
     @PutMapping("/{postId}/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public Result modifyComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentDto.CommentReq commentReq) {
+    public Result modifyComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentRequest commentRequest) {
         User user = getPrincipal();
-        CommentDto.CommentRes commentRes = commentService.modifyComment(postId, commentId, commentReq, user);
-        return resultService.getSuccessDataResult(Status.S_COMMENT_MODIFY, commentRes);
+        CommentResponse commentResponse = commentService.modifyComment(postId, commentId, commentRequest, user);
+        return resultService.getSuccessDataResult(Status.S_COMMENT_MODIFY, commentResponse);
     }
 
     private User getPrincipal() {

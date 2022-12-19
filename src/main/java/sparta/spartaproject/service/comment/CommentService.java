@@ -13,8 +13,8 @@ import sparta.spartaproject.exception.UnauthorizedException;
 import sparta.spartaproject.repository.comment.CommentRepository;
 import sparta.spartaproject.repository.post.PostRepository;
 
-import static sparta.spartaproject.dto.comment.CommentDto.CommentReq;
-import static sparta.spartaproject.dto.comment.CommentDto.CommentRes;
+import static sparta.spartaproject.dto.comment.CommentDto.CommentRequest;
+import static sparta.spartaproject.dto.comment.CommentDto.CommentResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +24,11 @@ public class CommentService {
     private final PostRepository postRepository;
 
     @Transactional
-    public CommentRes writeComment(Long postId, CommentReq commentReq, User user) {
+    public CommentResponse writeComment(Long postId, CommentRequest commentRequest, User user) {
         Post post = postRepository.findById(postId).orElseThrow(NotExistPostException::new);
-        Comment comment = CommentReq.toEntity(commentReq, post, user);
+        Comment comment = CommentRequest.toEntity(commentRequest, post, user);
         commentRepository.save(comment);
-        return CommentRes.of(comment);
+        return CommentResponse.of(comment);
     }
 
     @Transactional
@@ -40,13 +40,13 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentRes modifyComment(Long postId, Long commentId, CommentReq commentReq, User user) {
+    public CommentResponse modifyComment(Long postId, Long commentId, CommentRequest commentRequest, User user) {
         Post post = postRepository.findById(postId).orElseThrow(NotExistPostException::new);
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotExistCommentException::new);
         validatePostCommentUser(post, comment, user);
-        comment.editComment(commentReq);
+        comment.editComment(commentRequest);
         commentRepository.saveAndFlush(comment);
-        return CommentRes.of(comment);
+        return CommentResponse.of(comment);
     }
 
     private void validatePostCommentUser(Post post, Comment comment, User user) {

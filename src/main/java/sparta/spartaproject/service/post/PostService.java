@@ -23,30 +23,30 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional(readOnly = true)
-    public PostRes getOnePost(Long id) {
+    public PostResponse getOnePost(Long id) {
         Post findPost = postRepository.findById(id).orElseThrow(NotExistPostException::new);
-        return PostRes.of(findPost);
+        return PostResponse.of(findPost);
     }
 
     @Transactional(readOnly = true)
-    public List<PostRes> getAllPosts() {
+    public List<PostResponse> getAllPosts() {
         List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
-        return posts.stream().map(PostRes::of).toList();
+        return posts.stream().map(PostResponse::of).toList();
     }
 
     @Transactional
-    public void uploadPost(PostReq postReq, User user) {
-        Post post = PostReq.toEntity(postReq, user);
+    public void uploadPost(PostRequest postRequest, User user) {
+        Post post = PostRequest.toEntity(postRequest, user);
         postRepository.save(post);
     }
 
     @Transactional
-    public PostRes modifyPost(Long id, PostReq postReq, User user) {
+    public PostResponse modifyPost(Long id, PostRequest postRequest, User user) {
         Post findPost = postRepository.findById(id).orElseThrow(NotExistPostException::new);
         validateUserPost(user, findPost);
-        findPost.editPost(postReq);
+        findPost.editPost(postRequest);
         postRepository.saveAndFlush(findPost);
-        return PostRes.of(findPost);
+        return PostResponse.of(findPost);
     }
 
     @Transactional
@@ -57,9 +57,9 @@ public class PostService {
     }
 
     @Transactional
-    public List<PostSimpleRes> findPagePost(Pageable pageable) {
+    public List<PostSimpleResponse> findPagePost(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
-        return posts.stream().map(PostSimpleRes::of).collect(Collectors.toList());
+        return posts.stream().map(PostSimpleResponse::of).collect(Collectors.toList());
     }
 
     private void validateUserPost(User findUser, Post findPost) {

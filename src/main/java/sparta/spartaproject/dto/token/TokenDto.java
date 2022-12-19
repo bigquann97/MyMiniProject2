@@ -1,39 +1,33 @@
 package sparta.spartaproject.dto.token;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Builder
-public class TokenDto {
-    private String grantType;
-    private String accessToken;
-    private String refreshToken;
-    private Long accessTokenExpiresIn;
+public final class TokenDto {
+    private final String grantType;
+    private final String accessToken;
+    private final String refreshToken;
+    private final Long accessTokenExpiresIn;
 
     @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
     @Builder
-    public static class TokenReq {
-        private String accessToken;
-        private String refreshToken;
+    @RequiredArgsConstructor
+    public static final class TokenRequest {
+        private final String accessToken;
+        private final String refreshToken;
     }
 
     @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
     @Builder
-    public static class TokenRes {
-        private String accessToken;
-        private String refreshToken;
+    @RequiredArgsConstructor
+    public static final class TokenResponse {
+        private final String accessToken;
+        private final String refreshToken;
 
-        public static TokenRes of(TokenDto tokenDto) {
-            return TokenRes.builder()
+        public static TokenResponse of(TokenDto tokenDto) {
+            return TokenResponse.builder()
                     .accessToken(tokenDto.getAccessToken())
                     .refreshToken(tokenDto.getRefreshToken())
                     .build();

@@ -35,7 +35,7 @@ public class PostController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Result getOnePost(@PathVariable Long id) {
-        PostDto.PostRes post = postService.getOnePost(id);
+        PostDto.PostResponse post = postService.getOnePost(id);
         return resultService.getSuccessDataResult(Status.S_POST_VIEW, post);
     }
 
@@ -43,25 +43,25 @@ public class PostController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Result getAllPosts() {
-        List<PostDto.PostRes> posts = postService.getAllPosts();
+        List<PostDto.PostResponse> posts = postService.getAllPosts();
         return resultService.getSuccessDataResult(Status.S_POST_VIEW, posts);
     }
 
     @ApiOperation(value = "게시글 작성", notes = "게시글을 작성합니다.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Result uploadPost(@RequestBody PostDto.PostReq postReq) {
+    public Result uploadPost(@RequestBody PostDto.PostRequest postRequest) {
         User user = getPrincipal();
-        postService.uploadPost(postReq, user);
+        postService.uploadPost(postRequest, user);
         return resultService.getSuccessResult(Status.S_POST_UPLOAD);
     }
 
     @ApiOperation(value = "게시글 수정", notes = "게시글을 삭제합니다.")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Result modifyPost(@PathVariable Long id, @RequestBody PostDto.PostReq postReq) {
+    public Result modifyPost(@PathVariable Long id, @RequestBody PostDto.PostRequest postRequest) {
         User user = getPrincipal();
-        PostDto.PostRes modifiedPost = postService.modifyPost(id, postReq, user);
+        PostDto.PostResponse modifiedPost = postService.modifyPost(id, postRequest, user);
         return resultService.getSuccessDataResult(Status.S_POST_MODIFY, modifiedPost);
     }
 
@@ -81,7 +81,7 @@ public class PostController {
             @PageableDefault(size = 5,
                     sort = "id",
                     direction = Sort.Direction.DESC) Pageable pageable) {
-        List<PostDto.PostSimpleRes> pagePost = postService.findPagePost(pageable);
+        List<PostDto.PostSimpleResponse> pagePost = postService.findPagePost(pageable);
         return resultService.getSuccessDataResult(Status.S_POST_VIEW, pagePost);
     }
 
