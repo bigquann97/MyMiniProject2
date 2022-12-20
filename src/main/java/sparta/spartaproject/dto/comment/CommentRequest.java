@@ -12,6 +12,7 @@ import sparta.spartaproject.entity.User;
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 public final class CommentRequest {
+
     @ApiModelProperty(value = "댓글", notes = "댓글 내용을 입력해주세요", required = true, example = "좋아요 누르고 갑니다")
     private final String content;
 

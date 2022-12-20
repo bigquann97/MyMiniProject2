@@ -42,4 +42,5 @@ public class Post extends TimeStamped {
     public boolean hasComment(Comment targetComment) {
         return comments.stream().anyMatch(x -> x.equals(targetComment));
     }
+
 }

@@ -29,4 +29,5 @@ public class Comment extends TimeStamped {
     public void editComment(CommentRequest commentRequest) {
         this.content = commentRequest.getContent();
     }
+
 }

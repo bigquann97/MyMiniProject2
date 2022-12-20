@@ -9,6 +9,7 @@ import sparta.spartaproject.entity.Post;
 @Builder
 @RequiredArgsConstructor
 public final class PostSimpleResponse {
+
     private final Long id;
     private final String title;
 

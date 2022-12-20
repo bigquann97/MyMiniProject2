@@ -1,6 +1,7 @@
 package sparta.spartaproject.exception;
 
 public class AdminKeyNotMatchException extends RuntimeException {
+
     public AdminKeyNotMatchException() {
         super();
     }
@@ -12,4 +13,5 @@ public class AdminKeyNotMatchException extends RuntimeException {
     public AdminKeyNotMatchException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

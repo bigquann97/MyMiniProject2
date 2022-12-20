@@ -23,4 +23,5 @@ public final class SignupResponse {
                 .age(user.getAge())
                 .build();
     }
+
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @RequiredArgsConstructor
 public final class TokenResponse {
+
     private final String accessToken;
     private final String refreshToken;
 
@@ -17,4 +18,5 @@ public final class TokenResponse {
                 .refreshToken(tokenDto.getRefreshToken())
                 .build();
     }
+
 }
