@@ -12,8 +12,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import sparta.spartaproject.controller.UserController;
+import sparta.spartaproject.dto.token.TokenResponse;
+import sparta.spartaproject.dto.user.LoginRequest;
+import sparta.spartaproject.dto.user.SignupRequest;
 import sparta.spartaproject.result.ResultService;
-import sparta.spartaproject.service.user.UserService;
+import sparta.spartaproject.service.UserService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.refEq;
@@ -23,8 +27,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static sparta.spartaproject.dto.token.TokenDto.*;
-import static sparta.spartaproject.dto.user.UserDto.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
@@ -49,7 +51,7 @@ class UserControllerTest {
     @DisplayName("1. 회원가입 테스트")
     @Test
     void test_1() throws Exception {
-        SignUpReq req = SignUpReq.builder()
+        SignupRequest req = SignupRequest.builder()
                 .age(26)
                 .name("김관호")
                 .loginId("temp1234")
@@ -72,7 +74,7 @@ class UserControllerTest {
     @DisplayName("2. 로그인 테스트")
     @Test
     void test_2() throws Exception {
-        LoginReq req = new LoginReq("temp1234", "temp1234");
+        LoginRequest req = new LoginRequest("temp1234", "temp1234");
         when(userService.login(any(req.getClass()))).thenReturn(TokenResponse.builder().accessToken("at").refreshToken("rt").build());
 
         mockMvc.perform(

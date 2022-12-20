@@ -2,9 +2,9 @@ package sparta.spartaproject.factory;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import sparta.spartaproject.dto.user.UserDto;
-import sparta.spartaproject.entity.user.User;
-import sparta.spartaproject.entity.user.UserRole;
+import sparta.spartaproject.dto.user.SignupRequest;
+import sparta.spartaproject.entity.User;
+import sparta.spartaproject.entity.UserRole;
 
 public class UserFactory {
 
@@ -54,8 +54,8 @@ public class UserFactory {
                 .build();
     }
 
-    public static UserDto.SignUpReq createSignupReq() {
-        return UserDto.SignUpReq.builder()
+    public static SignupRequest createSignupReq() {
+        return SignupRequest.builder()
                 .email("temp@naver.com")
                 .adminKey("temp")
                 .wantAdmin(false)

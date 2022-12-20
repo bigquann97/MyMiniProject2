@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import sparta.spartaproject.entity.User;
 import sparta.spartaproject.factory.UserFactory;
 
 class UserTest {

@@ -9,15 +9,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sparta.spartaproject.config.jwt.TokenProvider;
-import sparta.spartaproject.dto.user.UserDto;
-import sparta.spartaproject.entity.user.User;
+import sparta.spartaproject.dto.user.LoginRequest;
+import sparta.spartaproject.dto.user.SignupRequest;
+import sparta.spartaproject.entity.User;
 import sparta.spartaproject.exception.AdminKeyNotMatchException;
 import sparta.spartaproject.exception.AlreadyExistUserException;
 import sparta.spartaproject.exception.NotExistUserException;
 import sparta.spartaproject.exception.PwNotMatchException;
 import sparta.spartaproject.factory.UserFactory;
-import sparta.spartaproject.repository.refreshToken.RefreshTokenRepository;
-import sparta.spartaproject.repository.user.UserRepository;
+import sparta.spartaproject.repository.RefreshTokenRepository;
+import sparta.spartaproject.repository.UserRepository;
+import sparta.spartaproject.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,7 +48,7 @@ class UserServiceTest {
     @DisplayName("1. 회원가입 정상 로직 테스트")
     @Test
     void test_1 () {
-        UserDto.SignUpReq req = UserDto.SignUpReq.builder()
+        SignupRequest req = SignupRequest.builder()
                 .email("temp@naver.com")
                 .wantAdmin(false)
                 .adminKey("makeMeAdmin")
@@ -68,7 +70,7 @@ class UserServiceTest {
     @DisplayName("2. 어드민 키 불일치 오류")
     @Test
     void test_2() {
-        UserDto.SignUpReq req = UserDto.SignUpReq.builder()
+        SignupRequest req = SignupRequest.builder()
                 .email("temp@naver.com")
                 .wantAdmin(true)
                 .adminKey("wrongKey")
@@ -86,7 +88,7 @@ class UserServiceTest {
     @DisplayName("3. 비밀번호, 재입력 비밀번호 불일치 오류")
     @Test
     void test_3 () {
-        UserDto.SignUpReq req = UserDto.SignUpReq.builder()
+        SignupRequest req = SignupRequest.builder()
                 .email("temp@naver.com")
                 .wantAdmin(false)
                 .adminKey("wrongKey")
@@ -104,7 +106,7 @@ class UserServiceTest {
     @DisplayName("4. 이미 존재하는 아이디 오류")
     @Test
     void test_4() {
-        UserDto.SignUpReq req = UserFactory.createSignupReq();
+        SignupRequest req = UserFactory.createSignupReq();
         given(userRepository.existsByLoginId("temp")).willReturn(true);
 
         assertThatThrownBy(() -> userService.signup(req))
@@ -114,7 +116,7 @@ class UserServiceTest {
     @DisplayName("5. 존재하지 않는 아이디 로그인 오류")
     @Test
     void test_5 () {
-        UserDto.LoginReq req = UserDto.LoginReq.builder()
+        LoginRequest req = LoginRequest.builder()
                 .loginId("temp")
                 .loginPw("temp")
                 .build();
