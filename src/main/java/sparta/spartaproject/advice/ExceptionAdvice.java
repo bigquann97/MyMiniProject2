@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import sparta.spartaproject.exception.*;
-import sparta.spartaproject.result.Result;
-import sparta.spartaproject.result.ResultService;
 import sparta.spartaproject.result.Status;
 
 @Slf4j

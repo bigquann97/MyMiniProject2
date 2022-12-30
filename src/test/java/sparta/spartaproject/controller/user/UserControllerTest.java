@@ -16,7 +16,6 @@ import sparta.spartaproject.controller.UserController;
 import sparta.spartaproject.dto.token.TokenResponse;
 import sparta.spartaproject.dto.user.LoginRequest;
 import sparta.spartaproject.dto.user.SignupRequest;
-import sparta.spartaproject.result.ResultService;
 import sparta.spartaproject.service.UserService;
 
 import static org.mockito.ArgumentMatchers.any;

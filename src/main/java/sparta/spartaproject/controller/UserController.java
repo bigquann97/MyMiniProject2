@@ -9,8 +9,6 @@ import sparta.spartaproject.dto.token.TokenResponse;
 import sparta.spartaproject.dto.user.LoginRequest;
 import sparta.spartaproject.dto.user.SignupRequest;
 import sparta.spartaproject.dto.user.SignupResponse;
-import sparta.spartaproject.result.Result;
-import sparta.spartaproject.result.ResultService;
 import sparta.spartaproject.result.Status;
 import sparta.spartaproject.service.UserService;
 
@@ -23,22 +21,21 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
-    private final ResultService resultService;
 
     @ApiOperation(value = "회원가입", notes = "회원가입")
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public Result signup(@RequestBody @Valid SignupRequest signupRequest) {
+    public SignupResponse signup(@RequestBody @Valid SignupRequest signupRequest) {
         SignupResponse data = userService.signup(signupRequest);
-        return resultService.getSuccessDataResult(Status.S_USER_CREATED, data);
+        return data;
     }
 
     @ApiOperation(value = "로그인", notes = "로그인")
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public Result login(@RequestBody LoginRequest loginRequest) {
+    public TokenResponse login(@RequestBody LoginRequest loginRequest) {
         TokenResponse data = userService.login(loginRequest);
-        return resultService.getSuccessDataResult(Status.S_USER_LOGIN, data);
+        return data;
     }
 
 }

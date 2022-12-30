@@ -4,17 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum Status {
-    S_USER_CREATED(100, "유저가 정상 생성되었습니다."),
-    S_USER_LOGIN(101, "정상 로그인되었습니다."),
-
-    S_POST_VIEW(110, "게시글을 정상적으로 조회했습니다."),
-    S_POST_UPLOAD(111, "게시글을 정상적으로 작성했습니다."),
-    S_POST_MODIFY(112, "게시글을 정상적으로 수정했습니다."),
-    S_POST_DELETE(113, "게시글을 정상적으로 삭제했습니다."),
-
-    S_COMMENT_UPLOAD(120, "댓글을 정상적으로 작성했습니다."),
-    S_COMMENT_MODIFY(121, "댓글을 정상적으로 수정했습니다."),
-    S_COMMENT_DELETE(122, "댓글을 정상적으로 삭제했습니다."),
 
     F_USER_PW_NOT_MATCH(300, "비밀번호가 재입력 비밀번호와 일치하지 않습니다."),
     F_USER_ALREADY_EXIST(301, "중복된 아이디의 유저가 존재합니다."),
