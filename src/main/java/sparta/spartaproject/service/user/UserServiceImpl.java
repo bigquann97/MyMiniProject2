@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sparta.spartaproject.config.jwt.JwtUtil;
 import sparta.spartaproject.dto.token.TokenDto;
+import sparta.spartaproject.dto.token.TokenRequest;
+import sparta.spartaproject.dto.token.TokenResponse;
 import sparta.spartaproject.dto.user.LoginRequest;
 import sparta.spartaproject.dto.user.SignupRequest;
 import sparta.spartaproject.entity.RefreshToken;
@@ -58,6 +60,25 @@ public class UserServiceImpl implements UserService {
         response.addHeader("Authorization", tokenDto.getAccessToken());
     }
 
+    @Override
+    @Transactional
+    public TokenResponse reissue(TokenRequest tokenRequestDto) {
+        validateRefreshToken(tokenRequestDto);
+
+        Authentication authentication = tokenProvider.createAuthentication(tokenRequestDto.getAccessToken());
+        RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+        validateRefreshTokenOwner(refreshToken, tokenRequestDto);
+
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
+        refreshTokenRepository.save(newRefreshToken);
+
+        TokenResponse tokenResponse = new TokenResponse(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
+        return tokenResponse;
+    }
+
+
     void validateSignupReq(SignupRequest signupRequest) {
         if (!signupRequest.validatePw())
             throw new SignException();
@@ -68,6 +89,18 @@ public class UserServiceImpl implements UserService {
     private void validatePw(User user, LoginRequest loginRequest) {
         if(!passwordEncoder.matches(loginRequest.getLoginPw(), user.getLoginPw()))
             throw new SignException();
+    }
+
+    private void validateRefreshToken(TokenRequest tokenRequestDto) {
+        if (!tokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
+            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+        }
+    }
+
+    private void validateRefreshTokenOwner(RefreshToken refreshToken, TokenRequest tokenRequestDto) {
+        if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
+            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+        }
     }
 
 }
