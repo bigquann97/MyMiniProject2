@@ -16,7 +16,7 @@ public class UserFactory {
                 .loginId("spartaAdmin")
                 .loginPw("spartaAdmin")
                 .email("spartaAdmin@sparta.com")
-                .role(UserRole.ROLE_ADMIN)
+                .role(UserRole.ADMIN)
                 .age(20)
                 .build();
     }
@@ -27,7 +27,7 @@ public class UserFactory {
                 .loginId("sparta")
                 .loginPw("sparta")
                 .email("sparta@sparta.com")
-                .role(UserRole.ROLE_USER)
+                .role(UserRole.USER)
                 .age(20)
                 .build();
     }
@@ -38,7 +38,7 @@ public class UserFactory {
                 .loginId("tantan")
                 .loginPw("tantan")
                 .email("tantan@sparta.com")
-                .role(UserRole.ROLE_USER)
+                .role(UserRole.USER)
                 .age(21)
                 .build();
     }
@@ -49,7 +49,7 @@ public class UserFactory {
                 .loginId(loginId)
                 .loginPw(loginPw)
                 .email("tantan@sparta.com")
-                .role(UserRole.ROLE_USER)
+                .role(UserRole.USER)
                 .age(21)
                 .build();
     }
