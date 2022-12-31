@@ -1,11 +1,9 @@
 package sparta.spartaproject.entity;
 
 import lombok.*;
-import sparta.spartaproject.dto.post.PostRequest;
+import sparta.spartaproject.entity.common.TimeStamped;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Builder
 @Entity
@@ -24,23 +22,14 @@ public class Post extends TimeStamped {
     @Lob
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id")
-    private User user;
+    private String userLoginId; // Unique
 
-    @OneToMany(mappedBy = "post",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.REMOVE)
-    @OrderBy("id asc")
-    private List<Comment> comments = new ArrayList<>();
-
-    public void editPost(PostRequest postRequest) {
-        this.title = postRequest.getTitle();
-        this.content = postRequest.getContent();
+    public void editPost(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 
-    public boolean hasComment(Comment targetComment) {
-        return comments.stream().anyMatch(x -> x.equals(targetComment));
+    public boolean isWrittenByFindUser(User findUser) {
+        return this.userLoginId.equals(findUser.getLoginId());
     }
-
 }

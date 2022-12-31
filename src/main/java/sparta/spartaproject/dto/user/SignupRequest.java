@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import sparta.spartaproject.entity.User;
 import sparta.spartaproject.entity.UserRole;
-import sparta.spartaproject.exception.AdminKeyNotMatchException;
+import sparta.spartaproject.exception.MismatchException;
 
 import javax.validation.constraints.*;
 
@@ -67,10 +67,10 @@ public final class SignupRequest {
                     .age(this.getAge())
                     .email(this.getEmail())
                     .name(this.getName())
-                    .role(UserRole.ROLE_ADMIN)
+                    .role(UserRole.ADMIN)
                     .build();
         } else if (this.isWantAdmin() && !this.checkAdminKey()) {
-            throw new AdminKeyNotMatchException();
+            throw new MismatchException();
         } else {
             return User.builder()
                     .loginId(this.getLoginId())
@@ -78,7 +78,7 @@ public final class SignupRequest {
                     .age(this.getAge())
                     .email(this.getEmail())
                     .name(this.getName())
-                    .role(UserRole.ROLE_USER)
+                    .role(UserRole.USER)
                     .build();
         }
     }

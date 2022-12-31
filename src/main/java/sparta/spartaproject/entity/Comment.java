@@ -1,9 +1,10 @@
 package sparta.spartaproject.entity;
 
 import lombok.*;
-import sparta.spartaproject.dto.comment.CommentRequest;
+import sparta.spartaproject.entity.common.TimeStamped;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Builder
@@ -18,16 +19,19 @@ public class Comment extends TimeStamped {
 
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id")
-    private User user;
+    private String userLoginId; // User 에 대한 unique
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "posts_id")
-    private Post post;
+    private Long postId; // Post에 대한 unique // fk값으로 하나르 ㄹ들고있어요
 
-    public void editComment(CommentRequest commentRequest) {
-        this.content = commentRequest.getContent();
+    public void editComment(String content) {
+        this.content = content;
     }
 
+    public boolean isBelongToPost(Post post) {
+        return this.postId.equals(post.getId());
+    }
+
+    public boolean isWrittenByFindUser(User findUser) {
+        return this.userLoginId.equals(findUser.getLoginId());
+    }
 }

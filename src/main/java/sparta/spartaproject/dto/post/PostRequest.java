@@ -20,7 +20,7 @@ public final class PostRequest {
         return Post.builder()
                 .title(this.getTitle())
                 .content(this.getContent())
-                .user(user)
+                .userLoginId(user.getLoginId())
                 .build();
     }
 }

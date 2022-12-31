@@ -13,13 +13,13 @@ import sparta.spartaproject.entity.User;
 @NoArgsConstructor(force = true)
 public final class CommentRequest {
 
-    @ApiModelProperty(value = "댓글", notes = "댓글 내용을 입력해주세요", required = true, example = "좋아요 누르고 갑니다")
+    @ApiModelProperty(value = "댓글", notes = "댓글 내용을 입력해주세요", required = true)
     private final String content;
 
-    public Comment toEntity(Post post, User user) {
+    public Comment toEntity(Long postId, String userLoginId) {
         return Comment.builder()
-                .user(user)
-                .post(post)
+                .userLoginId(userLoginId)
+                .postId(postId)
                 .content(this.getContent())
                 .build();
     }

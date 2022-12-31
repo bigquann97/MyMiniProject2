@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import sparta.spartaproject.entity.Comment;
+import sparta.spartaproject.entity.User;
 
 import java.time.LocalDateTime;
 
@@ -17,10 +18,10 @@ public final class CommentResponse {
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    public static CommentResponse of(Comment comment) {
+    public static CommentResponse of(Comment comment, String userLoginId) {
         return CommentResponse.builder()
                 .content(comment.getContent())
-                .userId(comment.getUser().getLoginId())
+                .userId(userLoginId)
                 .createdAt(comment.getCreatedAt())
                 .modifiedAt(comment.getModifiedAt())
                 .build();

@@ -9,104 +9,54 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import sparta.spartaproject.exception.*;
-import sparta.spartaproject.result.Status;
+import sparta.spartaproject.exception.api.RestApiException;
+import sparta.spartaproject.exception.api.Status;
 
 @Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class ExceptionAdvice {
 
-    private final ResultService resultService;
-
-    @ExceptionHandler(AdminKeyNotMatchException.class)
+    @ExceptionHandler(MismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result adminKeyNotMatchException(AdminKeyNotMatchException e) {
+    public RestApiException adminKeyNotMatchException(MismatchException e) {
         log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_ADMIN_KEY_NOT_MATCH);
+        return new RestApiException(Status.F_ADMIN_KEY_NOT_MATCH);
     }
 
-    @ExceptionHandler(AlreadyExistUserException.class)
+    @ExceptionHandler(TokenException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result alreadyExistUserException(AlreadyExistUserException e) {
+    public RestApiException invalidTokenException(TokenException e) {
         log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_USER_ALREADY_EXIST);
+        return new RestApiException(Status.F_INVALID_TOKEN);
     }
 
-    @ExceptionHandler(CommentPostNotMathException.class)
+    @ExceptionHandler(SignException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result commentPostNotMathException(CommentPostNotMathException e) {
+    public RestApiException pwNotMatchException(SignException e) {
         log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_COMMENT_POST_NOT_MATCH);
-    }
-
-    @ExceptionHandler(InvalidTokenException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result invalidTokenException(InvalidTokenException e) {
-        log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_INVALID_TOKEN);
-    }
-
-    @ExceptionHandler(NotExistCommentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result notExistCommentException(NotExistCommentException e) {
-        log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_COMMENT_NOT_EXIST);
-    }
-
-    @ExceptionHandler(NotExistPostException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result notExistPostException(NotExistPostException e) {
-        log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_POST_NOT_EXIST);
-    }
-
-    @ExceptionHandler(NotExistUserException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result notExistUserException(NotExistUserException e) {
-        log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_USER_NOT_EXIST);
-    }
-
-    @ExceptionHandler(PwNotMatchException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result pwNotMatchException(PwNotMatchException e) {
-        log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_USER_PW_NOT_MATCH);
-    }
-
-    @ExceptionHandler(UnauthorizedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result UnauthorizedException(UnauthorizedException e) {
-        log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(WrongPwException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result wrongPwException(WrongPwException e) {
-        log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_USER_WRONG_PW);
+        return new RestApiException(Status.F_USER_PW_NOT_MATCH);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result illegalArgumentException(Exception e) {
+    public RestApiException illegalArgumentException(Exception e) {
         log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_ILLEGAL_ARGUMENT);
+        return new RestApiException(Status.F_ILLEGAL_ARGUMENT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result methodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public RestApiException methodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_ILLEGAL_ARGUMENT);
+        return new RestApiException(Status.F_ILLEGAL_ARGUMENT);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+    public RestApiException httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error("e = {}", e.getMessage());
-        return resultService.getFailureResult(Status.F_UNAUTHORIZED);
+        return new RestApiException(Status.F_UNAUTHORIZED);
     }
 
 }

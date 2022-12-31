@@ -16,10 +16,10 @@ import javax.persistence.Table;
 public class RefreshToken {
 
     @Id
-    @Column(name = "rt_key")
+    @Column(name = "refresh_token_key")
     private String key;
 
-    @Column(name = "rt_value")
+    @Column(name = "refresh_token_value")
     private String value;
 
     @Builder
