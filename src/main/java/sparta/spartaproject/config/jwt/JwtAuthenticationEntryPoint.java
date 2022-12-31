@@ -1,8 +1,10 @@
 package sparta.spartaproject.config.jwt;
 
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
+import sparta.spartaproject.exception.TokenException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +18,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        throw new TokenException();
+//        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }
