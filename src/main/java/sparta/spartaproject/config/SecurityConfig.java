@@ -47,7 +47,7 @@ public class SecurityConfig {
                         .antMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/favicon.*", "/*/icon-*").permitAll()
                         .antMatchers("/h2-console", "/h2-console/**").permitAll()
                         .antMatchers("/test", "/resources/**", "/v3/**").permitAll()
-                        .antMatchers("/api/user/signup", "/api/user/login", "/api/reissue").permitAll()
+                        .antMatchers("/api/auth/sign-up", "/api/auth/sign-in", "/api/reissue").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 

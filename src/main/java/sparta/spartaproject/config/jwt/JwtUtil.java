@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 import sparta.spartaproject.config.auth.UserDetailsImpl;
 import sparta.spartaproject.config.auth.UserDetailsServiceImpl;
 import sparta.spartaproject.dto.token.TokenDto;
+import sparta.spartaproject.repository.RefreshTokenRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
@@ -40,11 +41,16 @@ public class JwtUtil {
 
     private final Key key;
     private final UserDetailsService userDetailsService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public JwtUtil(@Value("${jwt.secret.key}") String secretKey, UserDetailsService userDetailsService) {
+    public JwtUtil(@Value("${jwt.secret.key}") String secretKey,
+                   UserDetailsService userDetailsService,
+                   RefreshTokenRepository refreshTokenRepository
+                   ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.userDetailsService = userDetailsService;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     // header 토큰을 가져오기
@@ -91,8 +97,6 @@ public class JwtUtil {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
-
-
 
     public boolean validateToken(String token) {
         try {
