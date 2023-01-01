@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import study.boardProject.config.auth.UserDetailsImpl;
+import study.boardProject.common.config.auth.UserDetailsImpl;
 import study.boardProject.dto.post.PostRequest;
 import study.boardProject.dto.post.PostResponse;
 import study.boardProject.dto.post.PostSimpleResponse;

@@ -1,4 +1,4 @@
-package study.boardProject.config.jwt;
+package study.boardProject.common.config.jwt;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

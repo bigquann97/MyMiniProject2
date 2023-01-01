@@ -1,4 +1,4 @@
-package study.boardProject.config;
+package study.boardProject.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,10 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import study.boardProject.config.jwt.JwtAccessDeniedHandler;
-import study.boardProject.config.jwt.JwtAuthenticationEntryPoint;
-import study.boardProject.config.jwt.JwtFilter;
-import study.boardProject.config.jwt.JwtUtil;
+import study.boardProject.common.config.jwt.JwtAccessDeniedHandler;
+import study.boardProject.common.config.jwt.JwtAuthenticationEntryPoint;
+import study.boardProject.common.config.jwt.JwtFilter;
+import study.boardProject.common.config.jwt.JwtUtil;
 
 @Configuration
 @EnableWebSecurity

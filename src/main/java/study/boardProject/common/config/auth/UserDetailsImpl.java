@@ -1,4 +1,4 @@
-package study.boardProject.config.auth;
+package study.boardProject.common.config.auth;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

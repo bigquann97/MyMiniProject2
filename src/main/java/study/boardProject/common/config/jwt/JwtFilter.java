@@ -1,4 +1,4 @@
-package study.boardProject.config.jwt;
+package study.boardProject.common.config.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;

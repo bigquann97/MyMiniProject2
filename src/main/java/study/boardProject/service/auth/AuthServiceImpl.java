@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.boardProject.config.jwt.JwtUtil;
+import study.boardProject.common.config.jwt.JwtUtil;
 import study.boardProject.dto.token.TokenDto;
 import study.boardProject.dto.token.TokenRequest;
 import study.boardProject.dto.token.TokenResponse;

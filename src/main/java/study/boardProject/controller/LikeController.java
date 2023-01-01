@@ -3,7 +3,7 @@ package study.boardProject.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import study.boardProject.config.auth.UserDetailsImpl;
+import study.boardProject.common.config.auth.UserDetailsImpl;
 import study.boardProject.service.like.LikeService;
 
 @RequestMapping("/api/likes")

@@ -1,4 +1,4 @@
-package study.boardProject.config.jwt;
+package study.boardProject.common.config.jwt;
 
 
 import io.jsonwebtoken.*;

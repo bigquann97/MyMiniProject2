@@ -1,4 +1,4 @@
-package study.boardProject.advice;
+package study.boardProject.common.advice;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

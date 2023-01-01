@@ -1,4 +1,4 @@
-package study.boardProject.config.auth;
+package study.boardProject.common.config.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
