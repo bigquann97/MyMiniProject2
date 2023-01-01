@@ -9,10 +9,12 @@ import study.boardProject.dto.post.PostRequest;
 import study.boardProject.dto.post.PostResponse;
 import study.boardProject.dto.post.PostSimpleResponse;
 import study.boardProject.entity.Comment;
+import study.boardProject.entity.LikeCategory;
 import study.boardProject.entity.Post;
 import study.boardProject.entity.User;
 import study.boardProject.exception.AuthorizationException;
 import study.boardProject.repository.CommentRepository;
+import study.boardProject.repository.LikeRepository;
 import study.boardProject.repository.PostRepository;
 
 import java.util.List;
@@ -25,6 +27,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -37,7 +40,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public List<PostSimpleResponse> getAllPosts() {
-        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
+        List<Post> posts = postRepository.findPostsByOrderByCreatedAtDesc();
         return posts.stream().map(PostSimpleResponse::of).toList();
     }
 
@@ -57,9 +60,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void modifyPost(Long id, PostRequest postRequest, User user) {
-        Post findPost = postRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        validatePostAuthor(user, findPost);
+    public void modifyPost(Long postId, PostRequest postRequest, User user) {
+        Post findPost = postRepository.findPostByIdAndUserLoginId(postId, user.getLoginId()).orElseThrow(IllegalArgumentException::new);
         findPost.editPost(postRequest.getTitle(), postRequest.getContent());
         postRepository.saveAndFlush(findPost);
     }
@@ -67,15 +69,9 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void deletePostAndBelongs(Long postId, User user) {
-        Post findPost = postRepository.findById(postId).orElseThrow(IllegalArgumentException::new);
-        validatePostAuthor(user, findPost);
+        Post findPost = postRepository.findPostByIdAndUserLoginId(postId, user.getLoginId()).orElseThrow(IllegalArgumentException::new);
         postRepository.delete(findPost);
         commentRepository.deleteCommentsByPostId(postId); // 이게 추가가 되어야 하는 거죠
-    }
-
-    private void validatePostAuthor(User findUser, Post findPost) {
-        if (findPost.isWrittenByFindUser(findUser))
-            throw new AuthorizationException();
     }
 
 }

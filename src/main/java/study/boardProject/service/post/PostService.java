@@ -10,11 +10,16 @@ import java.util.List;
 
 public interface PostService {
 
-    public PostResponse getOnePost(Long postId);
-    public List<PostSimpleResponse> getAllPosts();
-    public List<PostSimpleResponse> findPagePost(Pageable pageable, int page);
-    public void uploadPost(PostRequest postRequest, User user);
-    public void modifyPost(Long id, PostRequest postRequest, User user);
-    public void deletePostAndBelongs(Long postId, User user);
+    PostResponse getOnePost(Long postId);
+
+    List<PostSimpleResponse> getAllPosts();
+
+    List<PostSimpleResponse> findPagePost(Pageable pageable, int page);
+
+    void uploadPost(PostRequest postRequest, User user);
+
+    void modifyPost(Long id, PostRequest postRequest, User user);
+
+    void deletePostAndBelongs(Long postId, User user);
 
 }
