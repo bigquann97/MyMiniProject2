@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import study.boardProject.entity.Post;
 import study.boardProject.entity.User;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 @Getter
 @RequiredArgsConstructor
 public final class PostRequest {
@@ -21,6 +23,7 @@ public final class PostRequest {
                 .title(this.getTitle())
                 .content(this.getContent())
                 .userLoginId(user.getLoginId())
+                .likeCount(new AtomicLong(0L))
                 .build();
     }
 }

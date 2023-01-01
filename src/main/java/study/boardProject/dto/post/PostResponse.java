@@ -22,9 +22,10 @@ public final class PostResponse { // PostResponseDto = Post + comment List
     private final List<CommentResponse> comments;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
+    private final Long likeCount;
 
     public static PostResponse of(Post post, List<Comment> comments) {
-        List<CommentResponse> commentResponses = comments.stream().map(x -> CommentResponse.of(x, x.getUserLoginId())).toList();
+        List<CommentResponse> commentResponses = comments.stream().map(CommentResponse::of).toList();
         return PostResponse.builder()
                 .author(post.getUserLoginId())
                 .title(post.getTitle())
@@ -32,6 +33,7 @@ public final class PostResponse { // PostResponseDto = Post + comment List
                 .createdAt(post.getCreatedAt())
                 .modifiedAt(post.getModifiedAt())
                 .comments(commentResponses)
+                .likeCount(post.getLikeCount().get())
                 .build();
     }
 }

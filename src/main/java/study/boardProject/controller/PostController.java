@@ -54,33 +54,26 @@ public class PostController {
     }
 
     @ApiOperation(value = "게시글 수정", notes = "게시글을 삭제합니다.")
-    @PutMapping("/{id}")
+    @PutMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public void modifyPost(
-            @PathVariable Long id,
+            @PathVariable Long postId,
             @RequestBody PostRequest postRequest,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        postService.modifyPost(id, postRequest, userDetails.getUser());
+        postService.modifyPost(postId, postRequest, userDetails.getUser());
     }
 
     @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제합니다.")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public void deletePost(
-            @PathVariable Long id,
+            @PathVariable Long postId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        postService.deletePostAndBelongs(id, userDetails.getUser());
+        postService.deletePostAndBelongs(postId, userDetails.getUser());
     }
 
 }
-
-//    @ApiOperation(value = "게시글 전체 조회", notes = "전체 게시글을 조회합니다.")
-//    @GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public List<PostSimpleResponse> getAllPosts() {
-//        return postService.getAllPosts();
-//    }
