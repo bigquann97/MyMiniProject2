@@ -1,7 +1,7 @@
 package study.boardProject.entity;
 
 import lombok.*;
-import study.boardProject.entity.common.TimeStamped;
+import study.boardProject.entity.common.TimeStamp;
 
 import javax.persistence.*;
 
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends TimeStamped {
+public class User extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
