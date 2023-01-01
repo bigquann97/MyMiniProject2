@@ -50,7 +50,6 @@ public class SecurityConfig {
                         .antMatchers("/api/auth/sign-up", "/api/auth/sign-in", "/api/reissue").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 }

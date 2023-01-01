@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
 
         refreshTokenRepository.save(refreshToken);
 
-        response.addHeader("Authorization", tokenDto.getAccessToken());
+        response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
     }
 
     @Override
