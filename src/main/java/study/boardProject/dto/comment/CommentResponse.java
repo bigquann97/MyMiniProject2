@@ -13,14 +13,16 @@ import java.time.LocalDateTime;
 public final class CommentResponse {
 
     private final String content;
-    private final String userId;
+    private final String userLoginId;
+    private final Long likeCount;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    public static CommentResponse of(Comment comment, String userLoginId) {
+    public static CommentResponse of(Comment comment) {
         return CommentResponse.builder()
                 .content(comment.getContent())
-                .userId(userLoginId)
+                .userLoginId(comment.getUserLoginId())
+                .likeCount(comment.getLikeCount().get())
                 .createdAt(comment.getCreatedAt())
                 .modifiedAt(comment.getModifiedAt())
                 .build();

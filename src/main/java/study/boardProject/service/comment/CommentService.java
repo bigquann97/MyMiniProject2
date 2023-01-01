@@ -6,7 +6,7 @@ import study.boardProject.entity.User;
 public interface CommentService {
     public void writeComment(Long postId, CommentRequest commentRequest, User user);
 
-    public void modifyComment(Long postId, Long commentId, CommentRequest commentRequest, User user);
+    public void modifyComment(Long commentId, CommentRequest commentRequest, User user);
 
-    public void deleteCommentAndBelongs(Long postId, Long commentId, User user);
+    public void deleteCommentAndBelongs(Long commentId, User user);
 }

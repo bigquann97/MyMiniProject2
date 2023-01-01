@@ -39,10 +39,9 @@ public class CommentController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public void deleteComment(
             @PathVariable Long commentId,
-            @RequestParam Long postId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        commentService.deleteCommentAndBelongs(postId, commentId, userDetails.getUser());
+        commentService.deleteCommentAndBelongs(commentId, userDetails.getUser());
     }
 
     // /api/comments/4?postId=4
@@ -52,11 +51,10 @@ public class CommentController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public void modifyComment(
             @PathVariable Long commentId,
-            @RequestParam Long postId,
             @RequestBody CommentRequest commentRequest,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        commentService.modifyComment(postId, commentId, commentRequest, userDetails.getUser());
+        commentService.modifyComment(commentId, commentRequest, userDetails.getUser());
     }
 
 }
