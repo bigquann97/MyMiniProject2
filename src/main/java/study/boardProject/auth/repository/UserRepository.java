@@ -1,7 +1,7 @@
 package study.boardProject.auth.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import study.boardProject.auth.domain.User;
+import study.boardProject.auth.entity.User;
 
 import java.util.Optional;
 

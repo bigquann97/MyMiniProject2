@@ -1,6 +1,6 @@
 package study.boardProject.like.service;
 
-import study.boardProject.auth.domain.User;
+import study.boardProject.auth.entity.User;
 
 public interface LikeService {
     void addLikeOnPost(Long postId, User user);

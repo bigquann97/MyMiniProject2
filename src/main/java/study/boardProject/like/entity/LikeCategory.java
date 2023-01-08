@@ -1,4 +1,4 @@
-package study.boardProject.like.domain;
+package study.boardProject.like.entity;
 
 import lombok.Getter;
 

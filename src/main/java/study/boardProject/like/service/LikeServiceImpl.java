@@ -3,13 +3,13 @@ package study.boardProject.like.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.boardProject.auth.domain.User;
-import study.boardProject.comment.Comment;
+import study.boardProject.auth.entity.User;
+import study.boardProject.comment.entity.Comment;
 import study.boardProject.comment.repository.CommentRepository;
 import study.boardProject.like.repository.LikeRepository;
-import study.boardProject.like.domain.Like;
-import study.boardProject.like.domain.LikeCategory;
-import study.boardProject.post.domain.Post;
+import study.boardProject.like.entity.Like;
+import study.boardProject.like.entity.LikeCategory;
+import study.boardProject.post.entity.Post;
 import study.boardProject.post.repository.PostRepository;
 
 @Service

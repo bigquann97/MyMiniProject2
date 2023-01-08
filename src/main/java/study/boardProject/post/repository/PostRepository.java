@@ -1,7 +1,7 @@
 package study.boardProject.post.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import study.boardProject.post.domain.Post;
+import study.boardProject.post.entity.Post;
 
 import java.util.List;
 import java.util.Optional;

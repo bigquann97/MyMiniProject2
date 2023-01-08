@@ -2,7 +2,7 @@ package study.boardProject.user.service;
 
 import study.boardProject.comment.dto.CommentResponse;
 import study.boardProject.post.dto.PostSimpleResponse;
-import study.boardProject.auth.domain.User;
+import study.boardProject.auth.entity.User;
 
 import java.util.List;
 

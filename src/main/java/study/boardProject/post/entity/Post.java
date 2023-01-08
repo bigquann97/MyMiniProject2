@@ -1,31 +1,34 @@
-package study.boardProject.comment;
+package study.boardProject.post.entity;
 
 import lombok.*;
-import study.boardProject.common.domain.TimeStamp;
+import study.boardProject.common.entity.TimeStamp;
 
 import javax.persistence.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Entity
 @Builder
+@Entity
 @Getter
+@Table(name = "posts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment extends TimeStamp {
+public class Post extends TimeStamp {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String title;
+
+    @Lob
     private String content;
 
-    private String userLoginId; // User 에 대한 unique
-
-    private Long postId; // Post에 대한 unique // fk값으로 하나르 ㄹ들고있어요
+    private String userLoginId; // Unique
 
     private AtomicLong likeCount;
 
-    public void editComment(String content) {
+    public void editPost(String title, String content) {
+        this.title = title;
         this.content = content;
     }
 
@@ -42,5 +45,4 @@ public class Comment extends TimeStamp {
         else
             this.likeCount.decrementAndGet();
     }
-
 }

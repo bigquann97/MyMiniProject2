@@ -6,10 +6,12 @@ import study.boardProject.auth.dto.LoginRequest;
 import study.boardProject.auth.dto.SignupRequest;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 public interface AuthService {
-
     void signup(SignupRequest signupRequest);
-    void login(LoginRequest loginRequest, HttpServletResponse response);
+
+    Map<String, String> login(LoginRequest loginRequest, HttpServletResponse response);
+
     TokenResponse reissue(TokenRequest tokenRequest);
 }

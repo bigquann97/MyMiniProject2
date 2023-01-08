@@ -1,4 +1,4 @@
-package study.boardProject.common.domain;
+package study.boardProject.common.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

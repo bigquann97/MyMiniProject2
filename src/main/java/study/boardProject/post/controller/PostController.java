@@ -26,6 +26,17 @@ public class PostController {
 
     private final PostService postService;
 
+    @ApiOperation(value = "게시글 작성", notes = "게시글을 작성합니다.")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void uploadPost(
+            @RequestBody PostRequest postRequest,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        postService.uploadPost(postRequest, userDetails.getUser());
+    }
+
     @ApiOperation(value = "게시글 단건 조회", notes = "단건 게시글을 조회합니다.")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -40,17 +51,6 @@ public class PostController {
             @RequestParam(defaultValue = "0") int page,
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return postService.findPagePost(pageable, page);
-    }
-
-    @ApiOperation(value = "게시글 작성", notes = "게시글을 작성합니다.")
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public void uploadPost(
-            @RequestBody PostRequest postRequest,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
-        postService.uploadPost(postRequest, userDetails.getUser());
     }
 
     @ApiOperation(value = "게시글 수정", notes = "게시글을 삭제합니다.")

@@ -1,7 +1,7 @@
-package study.boardProject.like.domain;
+package study.boardProject.like.entity;
 
 import lombok.*;
-import study.boardProject.common.domain.TimeStamp;
+import study.boardProject.common.entity.TimeStamp;
 
 import javax.persistence.*;
 

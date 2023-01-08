@@ -1,14 +1,17 @@
 package study.boardProject.common.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import study.boardProject.common.auth.AuthFilter;
+import study.boardProject.common.auth.AuthUtil;
+import study.boardProject.common.auth.AuthClaims;
 import study.boardProject.common.exception.api.RestApiException;
 import study.boardProject.common.exception.api.Status;
 
@@ -19,34 +22,29 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
+@Component
 @RequiredArgsConstructor
-public class JwtFilter extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter implements AuthFilter {
 
-    private final JwtUtil jwtUtil;
+    private final AuthUtil authUtil;
 
-    // 실제 필터링 로직은 doFilterInternal 에 들어감
-    // JWT 토큰의 인증 정보를 현재 쓰레드의 SecurityContext 에 저장하는 역할 수행
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-
-        // 1. Request Header 에서 토큰을 꺼냄
-        String token = jwtUtil.resolveToken(request);
-        // 2. validateToken 으로 토큰 유효성 검사
-        // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
+        String token = authUtil.resolveAuthTool(request);
         if(token != null) {
-            if(!jwtUtil.validateToken(token)){
+            if(!authUtil.validateAuthTool(token)){
                 jwtExceptionHandler(response, "Token Error", HttpStatus.UNAUTHORIZED.value());
                 return;
             }
-            Claims info = jwtUtil.parseClaims(token);
-            setAuthentication(info.getSubject());
+            AuthClaims info = authUtil.parseAuthClaims(token);
+            setAuthentication(info.getSubject()); // 시큐리티 영역
         }
         filterChain.doFilter(request,response);
     }
 
     public void setAuthentication(String username) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Authentication authentication = jwtUtil.createAuthentication(username);
+        Authentication authentication = authUtil.createAuthentication(username);
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
     }
@@ -55,7 +53,7 @@ public class JwtFilter extends OncePerRequestFilter {
         response.setStatus(statusCode);
         response.setContentType("application/json");
         try {
-            String json = new ObjectMapper().writeValueAsString(new RestApiException(Status.F_INVALID_TOKEN));
+            String json = new ObjectMapper().writeValueAsString(new RestApiException(Status.AUTH_INVALID_TOKEN));
             response.getWriter().write(json);
         } catch (Exception e) {
             log.error(e.getMessage());

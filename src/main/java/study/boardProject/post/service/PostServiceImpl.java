@@ -5,12 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.boardProject.comment.Comment;
-import study.boardProject.auth.domain.User;
+import study.boardProject.comment.entity.Comment;
+import study.boardProject.auth.entity.User;
 import study.boardProject.comment.repository.CommentRepository;
 import study.boardProject.like.repository.LikeRepository;
 import study.boardProject.post.dto.PostSimpleResponse;
-import study.boardProject.post.domain.Post;
+import study.boardProject.post.entity.Post;
 import study.boardProject.post.dto.PostRequest;
 import study.boardProject.post.dto.PostResponse;
 import study.boardProject.post.repository.PostRepository;
@@ -39,7 +39,7 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public List<PostSimpleResponse> getAllPosts() {
         List<Post> posts = postRepository.findPostsByOrderByCreatedAtDesc();
-        return posts.stream().map(PostSimpleResponse::of).toList();
+        return posts.stream().map(PostSimpleResponse::of).collect(Collectors.toList());
     }
 
     @Override

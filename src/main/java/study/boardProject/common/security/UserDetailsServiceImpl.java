@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.boardProject.auth.domain.User;
+import study.boardProject.auth.entity.User;
 import study.boardProject.auth.repository.UserRepository;
 
 @Service

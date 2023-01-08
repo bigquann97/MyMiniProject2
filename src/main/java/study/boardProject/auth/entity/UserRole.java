@@ -1,4 +1,4 @@
-package study.boardProject.auth.domain;
+package study.boardProject.auth.entity;
 
 public enum UserRole {
     USER(Authority.USER),  // 사용자 권한

@@ -4,11 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import study.boardProject.comment.dto.CommentResponse;
-import study.boardProject.comment.Comment;
-import study.boardProject.post.domain.Post;
+import study.boardProject.comment.entity.Comment;
+import study.boardProject.post.entity.Post;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -25,7 +26,7 @@ public final class PostResponse { // PostResponseDto = Post + comment List
     private final Long likeCount;
 
     public static PostResponse of(Post post, List<Comment> comments) {
-        List<CommentResponse> commentResponses = comments.stream().map(CommentResponse::of).toList();
+        List<CommentResponse> commentResponses = comments.stream().map(CommentResponse::of).collect(Collectors.toList());
         return PostResponse.builder()
                 .author(post.getUserLoginId())
                 .title(post.getTitle())

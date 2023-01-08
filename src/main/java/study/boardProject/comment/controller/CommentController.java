@@ -32,7 +32,7 @@ public class CommentController {
         commentService.writeComment(postId, commentRequest, userDetails.getUser());
     }
 
-    // /api/comments/4?postId=4
+    // /api/comments/4
     @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제합니다.")
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.OK)
@@ -44,7 +44,7 @@ public class CommentController {
         commentService.deleteCommentAndBelongs(commentId, userDetails.getUser());
     }
 
-    // /api/comments/4?postId=4
+    // /api/comments/4
     @ApiOperation(value = "댓글 수정", notes = "댓글을 수정합니다.")
     @PutMapping("/{commentId}")
     @ResponseStatus(HttpStatus.OK)

@@ -3,7 +3,7 @@ package study.boardProject.post.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import study.boardProject.post.domain.Post;
+import study.boardProject.post.entity.Post;
 
 import java.time.LocalDateTime;
 

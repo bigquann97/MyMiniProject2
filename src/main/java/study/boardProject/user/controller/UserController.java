@@ -22,7 +22,7 @@ public class UserController {
 
     // 내가 쓴 글
     @ApiOperation(value = "내가 쓴 글", notes = "내가 쓴 글을 조회합니다.")
-    @GetMapping("/my-posts")
+    @GetMapping("/posts")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<PostSimpleResponse> getMyPosts(
@@ -33,7 +33,7 @@ public class UserController {
 
     // 내가 쓴 댓글
     @ApiOperation(value = "내가 쓴 댓글", notes = "내가 쓴 댓글을 조회합니다.")
-    @GetMapping("/my-comments")
+    @GetMapping("/comments")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<CommentResponse> getMyComments(
@@ -45,7 +45,7 @@ public class UserController {
 
     // 내가 좋아요 누른 글
     @ApiOperation(value = "내가 좋아요 누른 글", notes = "내가 좋아요 누른 글을 조회합니다.")
-    @GetMapping("/my-like-posts")
+    @GetMapping("/liked-posts")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<PostSimpleResponse> getMyLikePosts(
@@ -57,7 +57,7 @@ public class UserController {
 
     // 내가 좋아요 누른 댓글
     @ApiOperation(value = "내가 좋아요 누른 댓글", notes = "내가 좋아요 누른 댓글을 조회합니다.")
-    @GetMapping("/my-like-comments")
+    @GetMapping("/liked-comments")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<CommentResponse> getMyLikeComments(

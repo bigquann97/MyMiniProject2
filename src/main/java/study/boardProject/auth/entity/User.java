@@ -1,7 +1,7 @@
-package study.boardProject.auth.domain;
+package study.boardProject.auth.entity;
 
 import lombok.*;
-import study.boardProject.common.domain.TimeStamp;
+import study.boardProject.common.entity.TimeStamp;
 
 import javax.persistence.*;
 

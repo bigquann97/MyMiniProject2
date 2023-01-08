@@ -3,8 +3,8 @@ package study.boardProject.post.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import study.boardProject.auth.domain.User;
-import study.boardProject.post.domain.Post;
+import study.boardProject.auth.entity.User;
+import study.boardProject.post.entity.Post;
 
 import java.util.concurrent.atomic.AtomicLong;
 

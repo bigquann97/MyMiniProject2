@@ -12,12 +12,10 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    // 유효한 자격증명을 제공하지 않고 접근하려 할때 401
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
-                         AuthenticationException authException) throws IOException {
+                         AuthenticationException authException) {
         throw new TokenException();
-//        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }

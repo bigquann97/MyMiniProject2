@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import study.boardProject.comment.Comment;
+import study.boardProject.comment.entity.Comment;
 
 import java.util.concurrent.atomic.AtomicLong;
 

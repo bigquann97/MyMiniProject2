@@ -1,4 +1,4 @@
-package study.boardProject.auth.domain;
+package study.boardProject.auth.entity;
 
 import lombok.Builder;
 import lombok.Getter;

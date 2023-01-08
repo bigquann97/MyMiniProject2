@@ -3,8 +3,8 @@ package study.boardProject.like.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.lang.NonNull;
-import study.boardProject.like.domain.Like;
-import study.boardProject.like.domain.LikeCategory;
+import study.boardProject.like.entity.Like;
+import study.boardProject.like.entity.LikeCategory;
 
 import javax.persistence.LockModeType;
 import java.util.List;

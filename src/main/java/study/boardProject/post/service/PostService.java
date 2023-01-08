@@ -1,7 +1,7 @@
 package study.boardProject.post.service;
 
 import org.springframework.data.domain.Pageable;
-import study.boardProject.auth.domain.User;
+import study.boardProject.auth.entity.User;
 import study.boardProject.post.dto.PostSimpleResponse;
 import study.boardProject.post.dto.PostRequest;
 import study.boardProject.post.dto.PostResponse;

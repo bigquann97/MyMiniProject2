@@ -14,7 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import study.boardProject.auth.dto.TokenDto;
-import study.boardProject.auth.repository.RefreshTokenRepository;
+import study.boardProject.common.auth.AuthDto;
+import study.boardProject.common.auth.AuthUtil;
+import study.boardProject.common.auth.AuthClaims;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class JwtUtil {
+public class JwtUtil implements AuthUtil {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORITIES_KEY = "auth";
@@ -33,20 +35,18 @@ public class JwtUtil {
 
     private final Key key;
     private final UserDetailsService userDetailsService;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     public JwtUtil(@Value("${jwt.secret.key}") String secretKey,
-                   UserDetailsService userDetailsService,
-                   RefreshTokenRepository refreshTokenRepository
+                   UserDetailsService userDetailsService
                    ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.userDetailsService = userDetailsService;
-        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     // header 토큰을 가져오기
-    public String resolveToken(HttpServletRequest request) {
+    @Override
+    public String resolveAuthTool(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
@@ -54,7 +54,8 @@ public class JwtUtil {
         return null;
     }
 
-    public TokenDto generateTokenDto(Authentication authentication) {
+    @Override
+    public AuthDto generateAuthDto(Authentication authentication) {
         // 권한들 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -67,7 +68,7 @@ public class JwtUtil {
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())       // payload "sub": "name"
                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
-                .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
+                .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022
                 .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
                 .compact();
 
@@ -85,16 +86,18 @@ public class JwtUtil {
                 .build();
     }
 
+    @Override
     public Authentication createAuthentication(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
-    public boolean validateToken(String token) {
+    @Override
+    public boolean validateAuthTool(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+        } catch (SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.");
@@ -106,11 +109,14 @@ public class JwtUtil {
         return false;
     }
 
-    public Claims parseClaims(String accessToken) {
+    @Override
+    public AuthClaims parseAuthClaims(String accessToken) {
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+            return new AuthClaims(claims);
         } catch (ExpiredJwtException e) {
-            return e.getClaims();
+            Claims claims = e.getClaims();
+            return new AuthClaims(claims);
         }
     }
 }

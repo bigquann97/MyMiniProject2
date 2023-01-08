@@ -3,8 +3,8 @@ package study.boardProject.common.security;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import study.boardProject.auth.domain.User;
-import study.boardProject.auth.domain.UserRole;
+import study.boardProject.auth.entity.User;
+import study.boardProject.auth.entity.UserRole;
 
 import java.util.ArrayList;
 import java.util.Collection;

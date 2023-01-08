@@ -7,19 +7,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.boardProject.common.auth.AuthDto;
 import study.boardProject.common.jwt.JwtUtil;
 import study.boardProject.auth.dto.TokenDto;
 import study.boardProject.auth.dto.TokenRequest;
 import study.boardProject.auth.dto.TokenResponse;
 import study.boardProject.auth.dto.LoginRequest;
 import study.boardProject.auth.dto.SignupRequest;
-import study.boardProject.auth.domain.RefreshToken;
-import study.boardProject.auth.domain.User;
+import study.boardProject.auth.entity.RefreshToken;
+import study.boardProject.auth.entity.User;
 import study.boardProject.common.exception.SignException;
 import study.boardProject.auth.repository.RefreshTokenRepository;
 import study.boardProject.auth.repository.UserRepository;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Service
@@ -41,15 +44,21 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Transactional
-    public void login(LoginRequest loginRequest, HttpServletResponse response) {
+    public Map<String, String> login(LoginRequest loginRequest, HttpServletResponse response) {
         User user = userRepository.findUserByLoginId(loginRequest.getLoginId()).orElseThrow(IllegalArgumentException::new);
         validatePw(user, loginRequest);
 
         UsernamePasswordAuthenticationToken authenticationToken = loginRequest.toAuthentication();
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        AuthDto authDto = tokenProvider.generateAuthDto(authentication);
+        TokenDto tokenDto = null;
 
+        if (authDto instanceof TokenDto) {
+            tokenDto = (TokenDto) authDto;
+        }
+
+        assert tokenDto != null;
         RefreshToken refreshToken = RefreshToken.builder()
                 .key(authentication.getName())
                 .value(tokenDto.getRefreshToken())
@@ -57,7 +66,9 @@ public class AuthServiceImpl implements AuthService {
 
         refreshTokenRepository.save(refreshToken);
 
-        response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+        Map<String, String> result = new HashMap<>();
+        result.put("Authorization", "Bearer " + tokenDto.getAccessToken());
+        return result;
     }
 
     @Override
@@ -70,12 +81,18 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
         validateRefreshTokenOwner(refreshToken, tokenRequestDto);
 
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        AuthDto authDto = tokenProvider.generateAuthDto(authentication);
+        TokenDto tokenDto = null;
+
+        if (authDto instanceof TokenDto) {
+            tokenDto = (TokenDto) authDto;
+        }
+
+        assert tokenDto != null;
         RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
         refreshTokenRepository.save(newRefreshToken);
 
-        TokenResponse tokenResponse = new TokenResponse(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
-        return tokenResponse;
+        return new TokenResponse(tokenDto.getAccessToken(), tokenDto.getRefreshToken());
     }
 
 
@@ -92,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void validateRefreshToken(TokenRequest tokenRequestDto) {
-        if (!tokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
+        if (!tokenProvider.validateAuthTool(tokenRequestDto.getRefreshToken())) {
             throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
         }
     }

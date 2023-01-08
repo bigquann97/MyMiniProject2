@@ -4,8 +4,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import study.boardProject.auth.domain.User;
-import study.boardProject.auth.domain.UserRole;
+import study.boardProject.auth.entity.User;
+import study.boardProject.auth.entity.UserRole;
 import study.boardProject.common.exception.MismatchException;
 
 import javax.validation.constraints.*;
@@ -45,41 +45,18 @@ public final class SignupRequest {
     @Max(value = 130, message = "1 ~ 130 사이 숫자를 입력해주세요.")
     private final Integer age;
 
-    @ApiModelProperty(value = "어드민 가입 여부", notes = "어드민 가입 여부", required = true, example = "false")
-    private final boolean wantAdmin;
-
-    @ApiModelProperty(value = "어드민 가입 키", notes = "어드민 가입 키", required = true, example = "makeMeAdmin")
-    private final String adminKey;
-
     public boolean validatePw() {
         return this.loginPw.equals(loginPwAgain);
     }
 
-    public boolean checkAdminKey() {
-        return this.adminKey.equals("makeMeAdmin");
-    }
-
     public User toEntity(String encodedPw) {
-        if (this.isWantAdmin() && this.checkAdminKey()) {
-            return User.builder()
-                    .loginId(this.getLoginId())
-                    .loginPw(encodedPw)
-                    .age(this.getAge())
-                    .email(this.getEmail())
-                    .name(this.getName())
-                    .role(UserRole.ADMIN)
-                    .build();
-        } else if (this.isWantAdmin() && !this.checkAdminKey()) {
-            throw new MismatchException();
-        } else {
-            return User.builder()
-                    .loginId(this.getLoginId())
-                    .loginPw(encodedPw)
-                    .age(this.getAge())
-                    .email(this.getEmail())
-                    .name(this.getName())
-                    .role(UserRole.USER)
-                    .build();
-        }
+        return User.builder()
+                .loginId(this.getLoginId())
+                .loginPw(encodedPw)
+                .age(this.getAge())
+                .email(this.getEmail())
+                .name(this.getName())
+                .role(UserRole.USER)
+                .build();
     }
 }

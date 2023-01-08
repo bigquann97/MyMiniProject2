@@ -3,7 +3,7 @@ package study.boardProject.comment.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import study.boardProject.comment.Comment;
+import study.boardProject.comment.entity.Comment;
 
 import java.time.LocalDateTime;
 

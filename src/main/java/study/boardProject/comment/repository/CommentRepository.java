@@ -2,7 +2,7 @@ package study.boardProject.comment.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
-import study.boardProject.comment.Comment;
+import study.boardProject.comment.entity.Comment;
 
 import java.util.List;
 import java.util.Optional;
