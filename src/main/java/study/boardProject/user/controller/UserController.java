@@ -2,12 +2,15 @@ package study.boardProject.user.controller;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import study.boardProject.common.security.UserDetailsImpl;
 import study.boardProject.comment.dto.CommentResponse;
+import study.boardProject.common.security.UserDetailsImpl;
 import study.boardProject.post.dto.PostSimpleResponse;
 import study.boardProject.user.service.UserService;
 
@@ -26,9 +29,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<PostSimpleResponse> getMyPosts(
+            @RequestParam int page,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        return userService.getMyPosts(userDetails.getUser());
+        return userService.getMyPosts(page + 1, pageable, userDetails.getUser());
     }
 
     // 내가 쓴 댓글
@@ -37,11 +42,12 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<CommentResponse> getMyComments(
+            @RequestParam int page,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        return userService.getMyComments(userDetails.getUser());
+        return userService.getMyComments(page + 1, pageable, userDetails.getUser());
     }
-
 
     // 내가 좋아요 누른 글
     @ApiOperation(value = "내가 좋아요 누른 글", notes = "내가 좋아요 누른 글을 조회합니다.")
@@ -49,11 +55,12 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<PostSimpleResponse> getMyLikePosts(
+            @RequestParam int page,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        return userService.getMyLikePosts(userDetails.getUser());
+        return userService.getMyLikePosts(page + 1, pageable, userDetails.getUser());
     }
-
 
     // 내가 좋아요 누른 댓글
     @ApiOperation(value = "내가 좋아요 누른 댓글", notes = "내가 좋아요 누른 댓글을 조회합니다.")
@@ -61,9 +68,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<CommentResponse> getMyLikeComments(
+            @RequestParam int page,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        return userService.getMyLikeComments(userDetails.getUser());
+        return userService.getMyLikeComments(page + 1, pageable, userDetails.getUser());
     }
 
 }

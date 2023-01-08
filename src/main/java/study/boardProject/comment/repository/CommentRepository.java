@@ -1,20 +1,16 @@
 package study.boardProject.comment.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
+import study.boardProject.auth.entity.User;
 import study.boardProject.comment.entity.Comment;
 
-import java.util.List;
-import java.util.Optional;
-
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    void deleteCommentsByPostId(@NonNull Long postId);
 
-    List<Comment> findCommentsByPostIdOrderByCreatedAtDesc(Long postId);
+    Page<Comment> findByPostId(@NonNull Long postId, Pageable pageable);
 
-    void deleteCommentByIdAndUserLoginId(Long id, String userLoginId);
+    Page<Comment> findByUser(User user, Pageable pageable);
 
-    Optional<Comment> findCommentByIdAndUserLoginId(Long id, String userLoginId);
-
-    List<Comment> findCommentsByUserLoginIdOrderByCreatedAtDesc(String loginId);
 }

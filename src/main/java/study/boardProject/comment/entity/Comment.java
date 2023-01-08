@@ -1,16 +1,20 @@
 package study.boardProject.comment.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import study.boardProject.auth.entity.User;
 import study.boardProject.common.entity.TimeStamp;
+import study.boardProject.post.entity.Post;
 
 import javax.persistence.*;
-import java.util.concurrent.atomic.AtomicLong;
+
+import static study.boardProject.common.exception.AuthException.AuthenticationException;
 
 @Entity
-@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends TimeStamp {
 
     @Id
@@ -19,28 +23,29 @@ public class Comment extends TimeStamp {
 
     private String content;
 
-    private String userLoginId; // User 에 대한 unique
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private Long postId; // Post에 대한 unique // fk값으로 하나르 ㄹ들고있어요
-
-    private AtomicLong likeCount;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     public void editComment(String content) {
         this.content = content;
     }
 
-    public void addLikeCount() {
-        if(likeCount.get() < 0L || likeCount.get() >= Long.MAX_VALUE)
-            throw new NumberFormatException();
-        else
-            this.likeCount.incrementAndGet();
+    @Builder
+    public Comment(String content, User user, Post post) {
+        this.content = content;
+        this.user = user;
+        this.post = post;
     }
 
-    public void minusLikeCount() {
-        if(likeCount.get() < 0L || likeCount.get() >= Long.MAX_VALUE)
-            throw new NumberFormatException();
-        else
-            this.likeCount.decrementAndGet();
+    public void validateUser(User attemptUser) {
+        if (!this.user.equals(attemptUser)) {
+            throw new AuthenticationException();
+        }
     }
 
 }

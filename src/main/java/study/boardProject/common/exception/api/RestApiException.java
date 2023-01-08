@@ -1,6 +1,7 @@
 package study.boardProject.common.exception.api;
 
 public class RestApiException {
+
     private int code;
     private String errorMessage;
 
@@ -8,4 +9,5 @@ public class RestApiException {
         this.code = status.getCode();
         this.errorMessage = status.getMsg();
     }
+
 }

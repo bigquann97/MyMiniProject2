@@ -1,17 +1,22 @@
 package study.boardProject.post.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import study.boardProject.auth.entity.User;
 import study.boardProject.common.entity.TimeStamp;
 
 import javax.persistence.*;
-import java.util.concurrent.atomic.AtomicLong;
 
-@Builder
+import static study.boardProject.common.exception.AuthException.AuthenticationException;
+
 @Entity
 @Getter
 @Table(name = "posts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends TimeStamp {
 
     @Id
@@ -23,26 +28,27 @@ public class Post extends TimeStamp {
     @Lob
     private String content;
 
-    private String userLoginId; // Unique
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private AtomicLong likeCount;
+    @Builder
+    public Post(String title, String content, User user) {
+        this.title = title;
+        this.content = content;
+        this.user = user;
+    }
 
     public void editPost(String title, String content) {
         this.title = title;
         this.content = content;
     }
 
-    public void addLikeCount() {
-        if(likeCount.get() < 0L || likeCount.get() >= Long.MAX_VALUE)
-            throw new NumberFormatException();
-        else
-            this.likeCount.incrementAndGet();
+    public void validateUser(User attemptUser) {
+        if (!this.user.equals(attemptUser)) {
+            throw new AuthenticationException();
+        }
     }
 
-    public void minusLikeCount() {
-        if(likeCount.get() < 0L || likeCount.get() >= Long.MAX_VALUE)
-            throw new NumberFormatException();
-        else
-            this.likeCount.decrementAndGet();
-    }
 }

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import study.boardProject.auth.entity.User;
 import study.boardProject.auth.entity.UserRole;
-import study.boardProject.common.exception.MismatchException;
 
 import javax.validation.constraints.*;
 
@@ -27,8 +26,9 @@ public final class SignupRequest {
     @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "a-z, A-Z, 0~9 값만 입력해주세요.")
     private final String loginPw;
 
-    @ApiModelProperty(value = "비밀번호 재입력", required = true, example = "sparta")
-    private final String loginPwAgain;
+    @ApiModelProperty(value = "닉네임", notes = "닉네임", required = true, example = "닉네임")
+    @NotBlank
+    private final String nickname;
 
     @ApiModelProperty(value = "사용자 이름", notes = "사용자 이름은 한글로 입력해주세요.", required = true, example = "김관호")
     @NotBlank
@@ -45,18 +45,16 @@ public final class SignupRequest {
     @Max(value = 130, message = "1 ~ 130 사이 숫자를 입력해주세요.")
     private final Integer age;
 
-    public boolean validatePw() {
-        return this.loginPw.equals(loginPwAgain);
-    }
-
     public User toEntity(String encodedPw) {
         return User.builder()
                 .loginId(this.getLoginId())
                 .loginPw(encodedPw)
                 .age(this.getAge())
                 .email(this.getEmail())
+                .nickname(this.getNickname())
                 .name(this.getName())
                 .role(UserRole.USER)
                 .build();
     }
+
 }

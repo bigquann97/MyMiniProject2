@@ -1,7 +1,10 @@
 package study.boardProject.like.entity;
 
 import lombok.*;
+import study.boardProject.auth.entity.User;
+import study.boardProject.comment.entity.Comment;
 import study.boardProject.common.entity.TimeStamp;
+import study.boardProject.post.entity.Post;
 
 import javax.persistence.*;
 
@@ -17,11 +20,23 @@ public class Like extends TimeStamp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private User user;
 
-    private Long targetId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private LikeCategory category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+
+    @Builder
+    public Like(User user, Post post, Comment comment) {
+        this.user = user;
+        this.post = post;
+        this.comment = comment;
+    }
+
 }

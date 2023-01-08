@@ -4,9 +4,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import study.boardProject.auth.entity.User;
 import study.boardProject.comment.entity.Comment;
-
-import java.util.concurrent.atomic.AtomicLong;
+import study.boardProject.post.entity.Post;
 
 @Getter
 @RequiredArgsConstructor
@@ -16,12 +16,12 @@ public final class CommentRequest {
     @ApiModelProperty(value = "댓글", notes = "댓글 내용을 입력해주세요", required = true)
     private final String content;
 
-    public Comment toEntity(Long postId, String userLoginId) {
+    public Comment toEntity(Post post, User user) {
         return Comment.builder()
-                .userLoginId(userLoginId)
-                .postId(postId)
+                .user(user)
+                .post(post)
                 .content(this.getContent())
-                .likeCount(new AtomicLong(0L))
                 .build();
     }
+
 }

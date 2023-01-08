@@ -45,5 +45,4 @@ public class LikeController {
         likeService.cancelLikeOnComment(id, userDetails.getUser());
     }
 
-
 }

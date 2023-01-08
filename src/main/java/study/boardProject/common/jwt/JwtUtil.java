@@ -14,9 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import study.boardProject.auth.dto.TokenDto;
+import study.boardProject.common.auth.AuthClaims;
 import study.boardProject.common.auth.AuthDto;
 import study.boardProject.common.auth.AuthUtil;
-import study.boardProject.common.auth.AuthClaims;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
@@ -44,9 +44,8 @@ public class JwtUtil implements AuthUtil {
         this.userDetailsService = userDetailsService;
     }
 
-    // header 토큰을 가져오기
     @Override
-    public String resolveAuthTool(HttpServletRequest request) {
+    public String resolveRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
@@ -56,32 +55,32 @@ public class JwtUtil implements AuthUtil {
 
     @Override
     public AuthDto generateAuthDto(Authentication authentication) {
-        // 권한들 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
 
-        // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+        Date accessExpiration = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+        Date refreshExpiration = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
+
         String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())       // payload "sub": "name"
-                .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
-                .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022
-                .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
+                .setSubject(authentication.getName())     // payload "sub": "name"
+                .claim(AUTHORITIES_KEY, authorities)      // payload "auth": "ROLE_USER"
+                .setExpiration(accessExpiration)          // payload "exp": 1516239022
+                .signWith(key, SignatureAlgorithm.HS512)  // header "alg": "HS512"
                 .compact();
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .setExpiration(refreshExpiration)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
         return TokenDto.builder()
                 .grantType(BEARER_PREFIX)
                 .accessToken(accessToken)
-                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+                .accessTokenExpiresIn(accessExpiration.getTime())
                 .refreshToken(refreshToken)
                 .build();
     }
@@ -93,9 +92,9 @@ public class JwtUtil implements AuthUtil {
     }
 
     @Override
-    public boolean validateAuthTool(String token) {
+    public boolean validateAuthTool(String authTool) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(authTool);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
@@ -110,13 +109,14 @@ public class JwtUtil implements AuthUtil {
     }
 
     @Override
-    public AuthClaims parseAuthClaims(String accessToken) {
+    public AuthClaims parseAuthClaims(String authTool) {
         try {
-            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(authTool).getBody();
             return new AuthClaims(claims);
         } catch (ExpiredJwtException e) {
             Claims claims = e.getClaims();
             return new AuthClaims(claims);
         }
     }
+
 }

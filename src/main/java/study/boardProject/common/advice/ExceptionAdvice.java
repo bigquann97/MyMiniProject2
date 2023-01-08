@@ -7,36 +7,46 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import study.boardProject.common.exception.*;
 import study.boardProject.common.exception.api.RestApiException;
 import study.boardProject.common.exception.api.Status;
-import study.boardProject.common.exception.MismatchException;
-import study.boardProject.common.exception.SignException;
-import study.boardProject.common.exception.TokenException;
 
 @Slf4j
 @RestControllerAdvice
 public class ExceptionAdvice {
 
-    @ExceptionHandler(MismatchException.class)
+    @ExceptionHandler(AuthException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public RestApiException adminKeyNotMatchException(MismatchException e) {
-        log.error("e = {}", e.getMessage());
-        return new RestApiException(Status.AUTH_ADMIN_KEY_NOT_MATCH);
-    }
-
-    @ExceptionHandler(TokenException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public RestApiException invalidTokenException(TokenException e) {
-        log.error("e = {}", e.getMessage());
+    public RestApiException authException(AuthException e) {
         return new RestApiException(Status.AUTH_INVALID_TOKEN);
     }
 
-    @ExceptionHandler(SignException.class)
+    @ExceptionHandler(CommentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public RestApiException pwNotMatchException(SignException e) {
-        log.error("e = {}", e.getMessage());
-        return new RestApiException(Status.AUTH_PASSWORD_NOT_MATCH);
+    public RestApiException commentException(CommentException e) {
+        return new RestApiException(Status.AUTH_INVALID_TOKEN);
     }
+
+    @ExceptionHandler(LikeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestApiException likeException(LikeException e) {
+        return new RestApiException(Status.AUTH_INVALID_TOKEN);
+    }
+
+    @ExceptionHandler(PostException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestApiException postException(PostException e) {
+        return new RestApiException(Status.AUTH_INVALID_TOKEN);
+    }
+
+
+    @ExceptionHandler(TokenException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestApiException tokenException(TokenException e) {
+        return new RestApiException(Status.AUTH_INVALID_TOKEN);
+    }
+
+    // 커스텀 익셉션 외
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -1,21 +1,28 @@
 package study.boardProject.like.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.lang.NonNull;
+import study.boardProject.auth.entity.User;
+import study.boardProject.comment.entity.Comment;
 import study.boardProject.like.entity.Like;
-import study.boardProject.like.entity.LikeCategory;
-
-import javax.persistence.LockModeType;
-import java.util.List;
+import study.boardProject.post.entity.Post;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
-    @Lock(value = LockModeType.OPTIMISTIC)
-    boolean existsByUserIdAndTargetIdAndCategory(@NonNull Long userId, @NonNull Long targetId, @NonNull LikeCategory category);
 
-    void deleteByTargetIdAndCategory(@NonNull Long targetId, @NonNull LikeCategory category);
+    long countByPost(@NonNull Post post);
 
-    long deleteByUserIdAndTargetIdAndCategory(Long userId, Long targetId, LikeCategory category);
+    Page<Like> findByUserAndCommentNull(@NonNull User user, Pageable pageable);
 
-    List<Like> findLikesByUserIdAndCategoryOrderByCreatedAt(Long id, LikeCategory category);
+    Page<Like> findByUserAndPostNull(@NonNull User user, Pageable pageable);
+
+    void deleteByPostAndUser(Post post, User user);
+
+    void deleteByCommentAndUser(Comment comment, User user);
+
+    boolean existsByPostAndUser(Post post, User user);
+
+    boolean existsByCommentAndUser(Comment comment, User user);
+
 }

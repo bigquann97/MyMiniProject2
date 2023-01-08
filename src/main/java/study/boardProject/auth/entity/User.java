@@ -1,16 +1,19 @@
 package study.boardProject.auth.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 import study.boardProject.common.entity.TimeStamp;
 
 import javax.persistence.*;
+import java.util.Objects;
 
-@Builder
 @Entity
 @Getter
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends TimeStamp {
 
     @Id
@@ -29,13 +32,38 @@ public class User extends TimeStamp {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private Integer age;
+
+    @Column(nullable = false, unique = true)
+    private String nickname;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 
-    public boolean isAdmin() {
-        return this.role.equals(UserRole.ADMIN);
+    @Builder
+    public User(String loginId, String loginPw, String name, String email, Integer age, UserRole role, String nickname) {
+        this.loginId = loginId;
+        this.loginPw = loginPw;
+        this.name = name;
+        this.nickname = nickname;
+        this.email = email;
+        this.age = age;
+        this.role = role;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
 }

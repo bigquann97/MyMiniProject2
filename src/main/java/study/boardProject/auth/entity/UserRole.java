@@ -1,6 +1,7 @@
 package study.boardProject.auth.entity;
 
 public enum UserRole {
+
     USER(Authority.USER),  // 사용자 권한
     ADMIN(Authority.ADMIN);  // 관리자 권한
 
@@ -18,4 +19,5 @@ public enum UserRole {
         public static final String USER = "ROLE_USER";
         public static final String ADMIN = "ROLE_ADMIN";
     }
+
 }

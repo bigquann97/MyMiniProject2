@@ -2,17 +2,15 @@ package study.boardProject.post.service;
 
 import org.springframework.data.domain.Pageable;
 import study.boardProject.auth.entity.User;
-import study.boardProject.post.dto.PostSimpleResponse;
 import study.boardProject.post.dto.PostRequest;
 import study.boardProject.post.dto.PostResponse;
+import study.boardProject.post.dto.PostSimpleResponse;
 
 import java.util.List;
 
 public interface PostService {
 
-    PostResponse getOnePost(Long postId);
-
-    List<PostSimpleResponse> getAllPosts();
+    PostResponse getOnePost(Long postId, int page, Pageable pageable);
 
     List<PostSimpleResponse> findPagePost(Pageable pageable, int page);
 

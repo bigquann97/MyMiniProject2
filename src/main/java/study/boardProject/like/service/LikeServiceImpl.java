@@ -6,11 +6,15 @@ import org.springframework.transaction.annotation.Transactional;
 import study.boardProject.auth.entity.User;
 import study.boardProject.comment.entity.Comment;
 import study.boardProject.comment.repository.CommentRepository;
-import study.boardProject.like.repository.LikeRepository;
 import study.boardProject.like.entity.Like;
-import study.boardProject.like.entity.LikeCategory;
+import study.boardProject.like.repository.LikeRepository;
 import study.boardProject.post.entity.Post;
 import study.boardProject.post.repository.PostRepository;
+
+import static study.boardProject.common.exception.CommentException.CommentNotFoundException;
+import static study.boardProject.common.exception.LikeException.AlreadyLikedException;
+import static study.boardProject.common.exception.LikeException.LikeNotFoundException;
+import static study.boardProject.common.exception.PostException.PostNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -23,59 +27,64 @@ public class LikeServiceImpl implements LikeService{
     @Override
     @Transactional
     public void addLikeOnPost(Long postId, User user) {
-        validateIfUserAlreadyLikedPost(postId, user);
-        Post post = postRepository.findById(postId).orElseThrow(IllegalArgumentException::new);
+        Post post = validateIfUserCanLikePostAndGetPost(postId, user);
         Like like = Like.builder()
-                .targetId(postId)
-                .category(LikeCategory.POST)
-                .userId(user.getId())
+                .post(post)
+                .user(user)
                 .build();
-        post.addLikeCount();
         likeRepository.save(like);
-        postRepository.save(post);
-    }
-
-    private void validateIfUserAlreadyLikedPost(Long postId, User user) {
-        if(likeRepository.existsByUserIdAndTargetIdAndCategory(user.getId(), postId, LikeCategory.POST))
-            throw new IllegalArgumentException();
     }
 
     @Override
     @Transactional
     public void cancelLikeOnPost(Long postId, User user) {
-        Post post = postRepository.findById(postId).orElseThrow(IllegalArgumentException::new);
-        long deletedCount = likeRepository.deleteByUserIdAndTargetIdAndCategory(user.getId(), postId, LikeCategory.POST);
-        if(deletedCount == 0) throw new IllegalArgumentException();
-        post.minusLikeCount();
-        postRepository.save(post);
+        Post post = validateIfUserCanCancelLikeOnPostAndGetPost(postId, user);
+        likeRepository.deleteByPostAndUser(post, user);
     }
 
     @Override
     @Transactional
     public void addLikeOnComment(Long commentId, User user) {
-        if(!likeRepository.existsByUserIdAndTargetIdAndCategory(user.getId(), commentId, LikeCategory.COMMENT)) {
-            Comment comment = commentRepository.findById(commentId).orElseThrow(IllegalArgumentException::new);
-            Like like = Like.builder()
-                    .targetId(commentId)
-                    .category(LikeCategory.COMMENT)
-                    .userId(user.getId())
-                    .build();
-            comment.addLikeCount();
-            likeRepository.save(like);
-            commentRepository.save(comment);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        Comment comment = validateIfUserCanLikeCommentAndGetComment(commentId, user);
+        Like like = Like.builder()
+                .comment(comment)
+                .user(user)
+                .build();
+        likeRepository.save(like);
     }
 
     @Override
     @Transactional
     public void cancelLikeOnComment(Long commentId, User user) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(IllegalArgumentException::new);
-        long deletedCount = likeRepository.deleteByUserIdAndTargetIdAndCategory(user.getId(), commentId, LikeCategory.COMMENT);
-        if(deletedCount == 0) throw new IllegalArgumentException();
-        comment.minusLikeCount();
-        commentRepository.save(comment);
+        Comment comment = validateIfUserCanCancelLikeOnCommentAndGetComment(commentId, user);
+        likeRepository.deleteByCommentAndUser(comment, user);
+    }
+
+    private Post validateIfUserCanLikePostAndGetPost(Long postId, User user) {
+        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        if(likeRepository.existsByPostAndUser(post, user))
+            throw new AlreadyLikedException();
+        return post;
+    }
+
+    private Post validateIfUserCanCancelLikeOnPostAndGetPost(Long postId, User user) {
+        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        if(!likeRepository.existsByPostAndUser(post, user))
+            throw new LikeNotFoundException();
+        return post;
+    }
+    private Comment validateIfUserCanLikeCommentAndGetComment(Long commentId, User user) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+        if(likeRepository.existsByCommentAndUser(comment, user))
+            throw new AlreadyLikedException();
+        return comment;
+    }
+
+    private Comment validateIfUserCanCancelLikeOnCommentAndGetComment(Long commentId, User user) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+        if(!likeRepository.existsByCommentAndUser(comment, user))
+            throw new LikeNotFoundException();
+        return comment;
     }
 
 }

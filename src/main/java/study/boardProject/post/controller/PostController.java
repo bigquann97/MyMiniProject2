@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import study.boardProject.common.security.UserDetailsImpl;
 import study.boardProject.post.dto.PostRequest;
 import study.boardProject.post.dto.PostResponse;
-import study.boardProject.post.service.PostService;
 import study.boardProject.post.dto.PostSimpleResponse;
+import study.boardProject.post.service.PostService;
 
 import java.util.List;
 
@@ -37,24 +37,32 @@ public class PostController {
         postService.uploadPost(postRequest, userDetails.getUser());
     }
 
+    // /api/posts/1?page=1
     @ApiOperation(value = "게시글 단건 조회", notes = "단건 게시글을 조회합니다.")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PostResponse getOnePost(@PathVariable Long id) {
-        return postService.getOnePost(id);
+    public PostResponse getOnePost(
+            @PathVariable Long id,
+            @RequestParam(name = "page") int commentPage,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return postService.getOnePost(id, commentPage, pageable);
     }
 
+    // /api/posts?page=1
     @ApiOperation(value = "게시글 페이징 조회", notes = "게시글을 페이징 조회합니다.")
-    @GetMapping // TODO: 2022/12/31 PAGE API URL
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_USER')")
     public List<PostSimpleResponse> showPagePost(
             @RequestParam(defaultValue = "0") int page,
-            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return postService.findPagePost(pageable, page);
     }
 
+    // /api/posts/1
     @ApiOperation(value = "게시글 수정", notes = "게시글을 삭제합니다.")
-    @PutMapping("/{postId}")
+    @PatchMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public void modifyPost(
@@ -65,6 +73,7 @@ public class PostController {
         postService.modifyPost(postId, postRequest, userDetails.getUser());
     }
 
+    // /api/posts/1
     @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제합니다.")
     @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)

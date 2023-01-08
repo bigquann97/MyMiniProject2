@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import study.boardProject.common.security.UserDetailsImpl;
 import study.boardProject.comment.dto.CommentRequest;
 import study.boardProject.comment.service.CommentService;
+import study.boardProject.common.security.UserDetailsImpl;
 
 @Api(value = "댓글", tags = "댓글")
 @RequiredArgsConstructor
@@ -41,7 +41,7 @@ public class CommentController {
             @PathVariable Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        commentService.deleteCommentAndBelongs(commentId, userDetails.getUser());
+        commentService.deleteComment(commentId, userDetails.getUser());
     }
 
     // /api/comments/4

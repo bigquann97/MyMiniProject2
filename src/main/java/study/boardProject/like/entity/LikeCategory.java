@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum LikeCategory {
+
     POST(Category.POST),  // 사용자 권한
     COMMENT(Category.COMMENT);  // 관리자 권한
 
@@ -17,4 +18,5 @@ public enum LikeCategory {
         public static final String POST = "CATEGORY_POST";
         public static final String COMMENT = "CATEGORY_COMMENT";
     }
+
 }

@@ -2,7 +2,6 @@ package study.boardProject.post.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import study.boardProject.comment.dto.CommentResponse;
 import study.boardProject.comment.entity.Comment;
 import study.boardProject.post.entity.Post;
@@ -12,12 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-@Builder
-@RequiredArgsConstructor
-public final class PostResponse { // PostResponseDto = Post + comment List
-     // PostResponseDto = Post(내부에 commentList)
+public final class PostResponse {
 
-    private final String author;
+    private final String nickname;
     private final String title;
     private final String content;
     private final List<CommentResponse> comments;
@@ -25,16 +21,28 @@ public final class PostResponse { // PostResponseDto = Post + comment List
     private final LocalDateTime modifiedAt;
     private final Long likeCount;
 
-    public static PostResponse of(Post post, List<Comment> comments) {
+    @Builder
+    public PostResponse(String nickname, String title, String content, List<CommentResponse> comments, LocalDateTime createdAt, LocalDateTime modifiedAt, Long likeCount) {
+        this.nickname = nickname;
+        this.title = title;
+        this.content = content;
+        this.comments = comments;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.likeCount = likeCount;
+    }
+
+    public static PostResponse of(Post post, List<Comment> comments, long likeCount) {
         List<CommentResponse> commentResponses = comments.stream().map(CommentResponse::of).collect(Collectors.toList());
         return PostResponse.builder()
-                .author(post.getUserLoginId())
+                .nickname(post.getUser().getNickname())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .createdAt(post.getCreatedAt())
                 .modifiedAt(post.getModifiedAt())
                 .comments(commentResponses)
-                .likeCount(post.getLikeCount().get())
+                .likeCount(0L)
                 .build();
     }
+
 }

@@ -9,9 +9,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import study.boardProject.common.auth.AuthClaims;
 import study.boardProject.common.auth.AuthFilter;
 import study.boardProject.common.auth.AuthUtil;
-import study.boardProject.common.auth.AuthClaims;
 import study.boardProject.common.exception.api.RestApiException;
 import study.boardProject.common.exception.api.Status;
 
@@ -30,7 +30,7 @@ public class JwtFilter extends OncePerRequestFilter implements AuthFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        String token = authUtil.resolveAuthTool(request);
+        String token = authUtil.resolveRequest(request);
         if(token != null) {
             if(!authUtil.validateAuthTool(token)){
                 jwtExceptionHandler(response, "Token Error", HttpStatus.UNAUTHORIZED.value());
