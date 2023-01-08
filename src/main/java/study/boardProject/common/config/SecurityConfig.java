@@ -12,10 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import study.boardProject.common.config.jwt.JwtAccessDeniedHandler;
-import study.boardProject.common.config.jwt.JwtAuthenticationEntryPoint;
-import study.boardProject.common.config.jwt.JwtFilter;
-import study.boardProject.common.config.jwt.JwtUtil;
+import study.boardProject.common.jwt.JwtAccessDeniedHandler;
+import study.boardProject.common.jwt.JwtAuthenticationEntryPoint;
+import study.boardProject.common.jwt.JwtFilter;
+import study.boardProject.common.jwt.JwtUtil;
 
 @Configuration
 @EnableWebSecurity

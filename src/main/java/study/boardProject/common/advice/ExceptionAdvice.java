@@ -8,11 +8,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import study.boardProject.exception.api.RestApiException;
-import study.boardProject.exception.api.Status;
-import study.boardProject.exception.MismatchException;
-import study.boardProject.exception.SignException;
-import study.boardProject.exception.TokenException;
+import study.boardProject.common.exception.api.RestApiException;
+import study.boardProject.common.exception.api.Status;
+import study.boardProject.common.exception.MismatchException;
+import study.boardProject.common.exception.SignException;
+import study.boardProject.common.exception.TokenException;
 
 @Slf4j
 @RestControllerAdvice
