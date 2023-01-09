@@ -239,3 +239,4 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/intellij,git,gradle,java,macos,groovy
 application.yml
 **/temp/
+*.yml

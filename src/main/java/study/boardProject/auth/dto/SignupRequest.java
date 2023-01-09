@@ -9,7 +9,6 @@ import study.boardProject.auth.entity.UserRole;
 
 import javax.validation.constraints.*;
 
-@Builder
 @Getter
 @RequiredArgsConstructor
 public final class SignupRequest {

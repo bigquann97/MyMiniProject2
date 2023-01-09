@@ -11,4 +11,5 @@ public interface CommentService {
 
     void deleteComment(Long commentId, User user);
 
+    void writeReply(Long parentId, CommentRequest commentRequest, User user);
 }

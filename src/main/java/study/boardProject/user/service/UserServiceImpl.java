@@ -15,8 +15,8 @@ import study.boardProject.post.dto.PostSimpleResponse;
 import study.boardProject.post.entity.Post;
 import study.boardProject.post.repository.PostRepository;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,26 +29,52 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<PostSimpleResponse> getMyPosts(int page, Pageable pageable, User user) {
+        List<PostSimpleResponse> result = new ArrayList<>();
         Page<Post> pagedPosts = postRepository.findByUser(user, pageable.withPage(page));
-        return pagedPosts.stream().map(PostSimpleResponse::of).collect(Collectors.toList());
+        for (Post post : pagedPosts) {
+            long likeCount = likeRepository.countByPost(post);
+            PostSimpleResponse element = PostSimpleResponse.of(post, likeCount);
+            result.add(element);
+        }
+        return result;
     }
 
     @Override
     public List<CommentResponse> getMyComments(int page, Pageable pageable, User user) {
+        List<CommentResponse> result = new ArrayList<>();
         Page<Comment> pagedComment = commentRepository.findByUser(user, pageable.withPage(page));
-        return pagedComment.stream().map(CommentResponse::of).collect(Collectors.toList());
+        for (Comment comment : pagedComment) {
+            long likeCount = likeRepository.countByComment(comment);
+            CommentResponse element = CommentResponse.of(comment, likeCount);
+            result.add(element);
+        }
+        return result;
     }
 
     @Override
     public List<PostSimpleResponse> getMyLikePosts(int page, Pageable pageable, User user) {
+        List<PostSimpleResponse> result = new ArrayList<>();
         Page<Like> pagedPostLikes = likeRepository.findByUserAndCommentNull(user, pageable.withPage(page));
-        return pagedPostLikes.stream().map(x -> PostSimpleResponse.of(x.getPost())).collect(Collectors.toList());
+        for (Like like : pagedPostLikes) {
+            Post post = like.getPost();
+            long likeCount = likeRepository.countByPost(post);
+            PostSimpleResponse element = PostSimpleResponse.of(post, likeCount);
+            result.add(element);
+        }
+        return result;
     }
 
     @Override
     public List<CommentResponse> getMyLikeComments(int page, Pageable pageable, User user) {
+        List<CommentResponse> result = new ArrayList<>();
         Page<Like> pagedCommentLikes = likeRepository.findByUserAndPostNull(user, pageable.withPage(page));
-        return pagedCommentLikes.stream().map(x -> CommentResponse.of(x.getComment())).collect(Collectors.toList());
+        for (Like like : pagedCommentLikes) {
+            Comment comment = like.getComment();
+            long likeCount = likeRepository.countByComment(comment);
+            CommentResponse element = CommentResponse.of(comment, likeCount);
+            result.add(element);
+        }
+        return result;
     }
 
 }

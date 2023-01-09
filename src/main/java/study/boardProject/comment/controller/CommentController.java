@@ -32,6 +32,33 @@ public class CommentController {
         commentService.writeComment(postId, commentRequest, userDetails.getUser());
     }
 
+    // /api/comments/reply?id=3
+    @ApiOperation(value = "대댓글 작성", notes = "대댓글을 작성합니다.")
+    @PostMapping("/reply")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void writeReply(
+            @RequestParam Long id,
+            @RequestBody CommentRequest commentRequest,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        commentService.writeReply(id, commentRequest, userDetails.getUser());
+    }
+
+
+    // /api/comments/4
+    @ApiOperation(value = "댓글 수정", notes = "댓글을 수정합니다.")
+    @PatchMapping("/{commentId}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void modifyComment(
+            @PathVariable Long commentId,
+            @RequestBody CommentRequest commentRequest,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        commentService.modifyComment(commentId, commentRequest, userDetails.getUser());
+    }
+
     // /api/comments/4
     @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제합니다.")
     @DeleteMapping("/{commentId}")
@@ -42,19 +69,6 @@ public class CommentController {
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         commentService.deleteComment(commentId, userDetails.getUser());
-    }
-
-    // /api/comments/4
-    @ApiOperation(value = "댓글 수정", notes = "댓글을 수정합니다.")
-    @PutMapping("/{commentId}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public void modifyComment(
-            @PathVariable Long commentId,
-            @RequestBody CommentRequest commentRequest,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
-        commentService.modifyComment(commentId, commentRequest, userDetails.getUser());
     }
 
 }

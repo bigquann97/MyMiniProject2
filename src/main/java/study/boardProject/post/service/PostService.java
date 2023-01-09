@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface PostService {
 
-    PostResponse getOnePost(Long postId, int page, Pageable pageable);
+    PostResponse getOnePost(Long postId);
 
     List<PostSimpleResponse> findPagePost(Pageable pageable, int page);
 

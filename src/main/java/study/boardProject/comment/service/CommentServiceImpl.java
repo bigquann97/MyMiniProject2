@@ -7,6 +7,7 @@ import study.boardProject.auth.entity.User;
 import study.boardProject.comment.dto.CommentRequest;
 import study.boardProject.comment.entity.Comment;
 import study.boardProject.comment.repository.CommentRepository;
+import study.boardProject.common.exception.CommentException;
 import study.boardProject.common.exception.PostException;
 import study.boardProject.post.entity.Post;
 import study.boardProject.post.repository.PostRepository;
@@ -29,6 +30,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public void writeReply(Long parentId, CommentRequest commentRequest, User user) {
+        Comment parent = commentRepository.findById(parentId).orElseThrow(CommentNotFoundException::new);
+        validateIfParentIsAlreadyReply(parent);
+        Post post = parent.getPost();
+        Comment reply = commentRequest.toEntity(post, user, parent);
+        commentRepository.save(reply);
+    }
+
+    @Override
     @Transactional
     public void modifyComment(Long commentId, CommentRequest commentRequest, User user) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
@@ -43,6 +53,11 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         comment.validateUser(user);
         commentRepository.delete(comment);
+    }
+
+    private void validateIfParentIsAlreadyReply(Comment parent) {
+        if(parent.isReply())
+            throw new CommentException();
     }
 
 }

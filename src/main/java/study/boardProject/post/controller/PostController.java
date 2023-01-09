@@ -37,16 +37,14 @@ public class PostController {
         postService.uploadPost(postRequest, userDetails.getUser());
     }
 
-    // /api/posts/1?page=1
+    // /api/posts/1
     @ApiOperation(value = "게시글 단건 조회", notes = "단건 게시글을 조회합니다.")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public PostResponse getOnePost(
-            @PathVariable Long id,
-            @RequestParam(name = "page") int commentPage,
-            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+            @PathVariable Long id
     ) {
-        return postService.getOnePost(id, commentPage, pageable);
+        return postService.getOnePost(id);
     }
 
     // /api/posts?page=1
@@ -55,9 +53,9 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<PostSimpleResponse> showPagePost(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return postService.findPagePost(pageable, page);
+        return postService.findPagePost(pageable, page - 1);
     }
 
     // /api/posts/1

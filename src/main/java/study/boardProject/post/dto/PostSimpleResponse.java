@@ -24,12 +24,12 @@ public final class PostSimpleResponse {
         this.createdAt = createdAt;
     }
 
-    public static PostSimpleResponse of(Post post) {
+    public static PostSimpleResponse of(Post post, Long likeCount) {
         return PostSimpleResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .nickname(post.getUser().getNickname())
-                .likeCount(0L)
+                .likeCount(likeCount)
                 .createdAt(post.getCreatedAt())
                 .build();
     }

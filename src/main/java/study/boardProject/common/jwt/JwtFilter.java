@@ -51,9 +51,9 @@ public class JwtFilter extends OncePerRequestFilter implements AuthFilter {
 
     public void jwtExceptionHandler(HttpServletResponse response, String msg, int statusCode) {
         response.setStatus(statusCode);
-        response.setContentType("application/json");
+        response.setContentType("application/json;charset=UTF-8");
         try {
-            String json = new ObjectMapper().writeValueAsString(new RestApiException(Status.AUTH_INVALID_TOKEN));
+            String json = new ObjectMapper().writeValueAsString(new RestApiException(Status.TOKEN));
             response.getWriter().write(json);
         } catch (Exception e) {
             log.error(e.getMessage());

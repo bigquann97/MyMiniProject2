@@ -31,15 +31,20 @@ public class Comment extends TimeStamp {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parentId")
+    private Comment parent;
+
     public void editComment(String content) {
         this.content = content;
     }
 
     @Builder
-    public Comment(String content, User user, Post post) {
+    public Comment(String content, User user, Post post, Comment parent) {
         this.content = content;
         this.user = user;
         this.post = post;
+        this.parent = parent;
     }
 
     public void validateUser(User attemptUser) {
@@ -48,4 +53,7 @@ public class Comment extends TimeStamp {
         }
     }
 
+    public boolean isReply() {
+        return this.parent != null;
+    }
 }

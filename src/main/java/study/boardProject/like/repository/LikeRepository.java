@@ -10,6 +10,7 @@ import study.boardProject.like.entity.Like;
 import study.boardProject.post.entity.Post;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
+    long countByComment(@NonNull Comment comment);
 
     long countByPost(@NonNull Post post);
 

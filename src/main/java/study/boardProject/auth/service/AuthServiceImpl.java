@@ -30,6 +30,9 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthUtil authUtil;
 
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
+
     @Transactional
     public void signup(SignupRequest signupRequest) {
         validateSignupReq(signupRequest);
@@ -40,27 +43,26 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     public TokenResponse login(LoginRequest loginRequest, HttpServletResponse response) {
-        User user = userRepository.findUserByLoginId(loginRequest.getLoginId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByLoginId(loginRequest.getLoginId()).orElseThrow(UserNotFoundException::new);
         validatePw(user, loginRequest);
 
-        Authentication authentication = authUtil.createAuthentication(user.getLoginId());
+        Authentication authentication = authUtil.createAuthentication(user.getEmail());
         AuthDto authDto = authUtil.generateAuthDto(authentication);
 
         if (authDto instanceof TokenDto) {
             TokenDto tokenDto = (TokenDto) authDto;
 
             RefreshToken refreshToken = RefreshToken.builder()
-                    .key(authentication.getName())
-                    .value(tokenDto.getRefreshToken())
+                    .email(authentication.getName())
+                    .refreshToken(tokenDto.getRefreshToken())
                     .build();
 
             refreshTokenRepository.save(refreshToken);
 
-            return TokenResponse.builder()
-                    .accessToken(tokenDto.getAccessToken())
-                    .refreshToken(tokenDto.getRefreshToken())
-                    .build();
+            response.addHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + tokenDto.getAccessToken());
+            return TokenResponse.of(tokenDto);
         }
+
 
         throw new AuthException();
     }
@@ -69,13 +71,12 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public TokenResponse reissue(TokenRequest tokenRequest) {
         validateRefreshToken(tokenRequest);
-        String loginId = authUtil.parseAuthClaims(tokenRequest.getRefreshToken()).getSubject();
-
-        Authentication authentication = authUtil.createAuthentication(loginId);
-        RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName()).orElseThrow(AlreadyLogoutException::new);
+        String email = authUtil.parseAuthClaims(tokenRequest.getRefreshToken()).getSubject();
+        RefreshToken refreshToken = refreshTokenRepository.findByEmail(email).orElseThrow(AlreadyLogoutException::new);
 
         validateRefreshTokenOwner(refreshToken, tokenRequest);
 
+        Authentication authentication = authUtil.createAuthentication(email);
         AuthDto authDto = authUtil.generateAuthDto(authentication);
 
         if (authDto instanceof TokenDto) {
@@ -93,11 +94,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    void validateSignupReq(SignupRequest signupRequest) {
+    private void validateSignupReq(SignupRequest signupRequest) {
         if (userRepository.existsByLoginId(signupRequest.getLoginId()))
             throw new DuplicatedLoginIdException();
         else if (userRepository.existsByNickname(signupRequest.getNickname()))
             throw new AuthException.DuplicatedNicknameException();
+        else if (userRepository.existsByEmail(signupRequest.getEmail()))
+            throw new AuthException.DuplicatedEmailException();
     }
 
     private void validatePw(User user, LoginRequest loginRequest) {
@@ -112,7 +115,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void validateRefreshTokenOwner(RefreshToken refreshToken, TokenRequest tokenRequestDto) {
-        if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
+        if (!refreshToken.validateOwner(tokenRequestDto.getRefreshToken())) {
             throw new TokenOwnerNotMatchException();
         }
     }

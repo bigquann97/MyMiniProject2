@@ -17,4 +17,7 @@ public class AuthException extends RuntimeException {
     public static class DuplicatedNicknameException extends AuthException {
     }
 
+    public static class DuplicatedEmailException extends AuthException {
+    }
+
 }

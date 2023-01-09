@@ -15,8 +15,10 @@ import study.boardProject.post.dto.PostSimpleResponse;
 import study.boardProject.post.entity.Post;
 import study.boardProject.post.repository.PostRepository;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import static study.boardProject.common.exception.PostException.PostNotFoundException;
 
@@ -38,18 +40,31 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public PostResponse getOnePost(Long postId, int page, Pageable pageable) {
+    public PostResponse getOnePost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
-        long likeCount = likeRepository.countByPost(post);
-        Page<Comment> pagedComment = commentRepository.findByPostId(postId, pageable.withPage(page + 1));
-        return PostResponse.of(post, pagedComment.toList(), likeCount);
+        long postLikeCount = likeRepository.countByPost(post);
+        List<Comment> comments = commentRepository.findByPost(post);
+        Map<Comment, Long> commentMap = new LinkedHashMap<>();
+
+        for (Comment comment : comments) {
+            long commentLikeCount = likeRepository.countByComment(comment);
+            commentMap.put(comment, commentLikeCount);
+        }
+
+        return PostResponse.of(post, postLikeCount, commentMap);
     }
 
     @Override
     @Transactional
     public List<PostSimpleResponse> findPagePost(Pageable pageable, int page) {
-        Page<Post> pages = postRepository.findAll(pageable.withPage(page + 1));
-        return pages.stream().map(PostSimpleResponse::of).collect(Collectors.toList());
+        List<PostSimpleResponse> result = new ArrayList<>();
+        Page<Post> pages = postRepository.findAll(pageable.withPage(page));
+        for (Post post : pages) {
+            long likeCount = likeRepository.countByPost(post);
+            PostSimpleResponse element = PostSimpleResponse.of(post, likeCount);
+            result.add(element);
+        }
+        return result;
     }
 
     @Override

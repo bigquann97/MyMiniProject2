@@ -10,7 +10,7 @@ public interface AuthUtil {
 
     AuthDto generateAuthDto(Authentication authentication);
 
-    Authentication createAuthentication(String username);
+    Authentication createAuthentication(String email);
 
     boolean validateAuthTool(String authTool);
 

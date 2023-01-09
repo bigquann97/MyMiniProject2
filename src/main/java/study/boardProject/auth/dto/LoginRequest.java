@@ -10,7 +10,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Getter
-@Builder
 @RequiredArgsConstructor
 public final class LoginRequest {
 
@@ -19,7 +18,6 @@ public final class LoginRequest {
     @Size(min = 4, max = 10)
     @Pattern(regexp = "^[a-z0-9]*$", message = "a-z, 0~9 값만 입력해주세요.")
     private final String loginId;
-
 
     @ApiModelProperty(value = "비밀번호", notes = "비밀번호를 입력해주세요", required = true, example = "sparta")
     @NotBlank

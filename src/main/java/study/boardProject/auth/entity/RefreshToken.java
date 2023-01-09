@@ -16,21 +16,22 @@ import javax.persistence.Table;
 public class RefreshToken {
 
     @Id
-    @Column(name = "refresh_token_key")
-    private String key;
+    private String email;
 
-    @Column(name = "refresh_token_value")
-    private String value;
+    private String refreshToken;
 
     @Builder
-    public RefreshToken(String key, String value) {
-        this.key = key;
-        this.value = value;
+    public RefreshToken(String email, String refreshToken) {
+        this.email = email;
+        this.refreshToken = refreshToken;
     }
 
     public RefreshToken updateValue(String token) {
-        this.value = token;
+        this.refreshToken = token;
         return this;
     }
 
+    public boolean validateOwner(String refreshToken) {
+        return this.refreshToken.equals(refreshToken);
+    }
 }

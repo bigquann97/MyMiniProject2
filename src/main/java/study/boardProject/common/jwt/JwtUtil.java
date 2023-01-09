@@ -71,8 +71,8 @@ public class JwtUtil implements AuthUtil {
                 .signWith(key, SignatureAlgorithm.HS512)  // header "alg": "HS512"
                 .compact();
 
-        // Refresh Token 생성
         String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName())
                 .setExpiration(refreshExpiration)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
@@ -86,8 +86,8 @@ public class JwtUtil implements AuthUtil {
     }
 
     @Override
-    public Authentication createAuthentication(String username) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    public Authentication createAuthentication(String email) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
@@ -97,13 +97,15 @@ public class JwtUtil implements AuthUtil {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(authTool);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+            log.error("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
+            log.error("만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
+            log.error("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+            log.error("JWT 토큰이 잘못되었습니다.");
+        } catch (Exception e) {
+            log.error("잘못된 토큰입니다.");
         }
         return false;
     }

@@ -7,10 +7,13 @@ import study.boardProject.auth.entity.User;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    boolean existsByEmail(@NonNull String email);
 
     boolean existsByNickname(@NonNull String nickname);
 
-    Optional<User> findUserByLoginId(String loginId);
+    Optional<User> findByLoginId(String loginId);
+
+    Optional<User> findByEmail(String email);
 
     boolean existsByLoginId(String loginId);
     

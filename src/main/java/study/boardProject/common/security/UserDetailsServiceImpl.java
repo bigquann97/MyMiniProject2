@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import study.boardProject.auth.entity.User;
 import study.boardProject.auth.repository.UserRepository;
 
+import static study.boardProject.common.exception.AuthException.UserNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -16,14 +18,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findUserByLoginId(username)
+    public UserDetailsImpl loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
                 .map(this::createUserDetails)
-                .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     private UserDetailsImpl createUserDetails(User user) {
-        return new UserDetailsImpl(user, user.getLoginId());
+        return new UserDetailsImpl(user, user.getEmail());
     }
 
 }
