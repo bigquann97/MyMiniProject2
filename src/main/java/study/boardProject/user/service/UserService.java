@@ -15,6 +15,6 @@ public interface UserService {
 
     List<PostSimpleResponse> getMyLikePosts(int page, Pageable pageable, User user);
 
-    List<CommentResponse> getMyLikeComments(int i, Pageable pageable, User user);
+    List<CommentResponse> getMyLikeComments(int page, Pageable pageable, User user);
 
 }

@@ -44,4 +44,5 @@ public final class CommentResponse {
     public void addReply(CommentResponse commentResponse) {
         this.replies.add(commentResponse);
     }
+
 }

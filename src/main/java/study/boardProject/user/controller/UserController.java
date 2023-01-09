@@ -29,11 +29,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<PostSimpleResponse> getMyPosts(
-            @RequestParam int page,
+            @RequestParam(defaultValue = "1") int page,
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        return userService.getMyPosts(page + 1, pageable, userDetails.getUser());
+        return userService.getMyPosts(page - 1, pageable, userDetails.getUser());
     }
 
     // 내가 쓴 댓글
@@ -42,11 +42,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<CommentResponse> getMyComments(
-            @RequestParam int page,
+            @RequestParam(defaultValue = "1") int page,
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        return userService.getMyComments(page + 1, pageable, userDetails.getUser());
+        return userService.getMyComments(page - 1, pageable, userDetails.getUser());
     }
 
     // 내가 좋아요 누른 글
@@ -55,11 +55,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<PostSimpleResponse> getMyLikePosts(
-            @RequestParam int page,
+            @RequestParam(defaultValue = "1") int page,
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        return userService.getMyLikePosts(page + 1, pageable, userDetails.getUser());
+        return userService.getMyLikePosts(page - 1, pageable, userDetails.getUser());
     }
 
     // 내가 좋아요 누른 댓글
@@ -68,11 +68,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<CommentResponse> getMyLikeComments(
-            @RequestParam int page,
+            @RequestParam(defaultValue = "1") int page,
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        return userService.getMyLikeComments(page + 1, pageable, userDetails.getUser());
+        return userService.getMyLikeComments(page - 1, pageable, userDetails.getUser());
     }
 
 }

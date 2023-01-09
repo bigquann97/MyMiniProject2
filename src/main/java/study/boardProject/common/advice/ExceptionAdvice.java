@@ -1,6 +1,7 @@
 package study.boardProject.common.advice;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -47,7 +48,9 @@ public class ExceptionAdvice {
         RestApiException result = new RestApiException();
 
         if (e instanceof CommentNotFoundException) {
-            result = new RestApiException(Status.COMMENT_NOT_FOUND);
+            return result.changeStatus(Status.COMMENT_NOT_FOUND);
+        } else if (e instanceof CannotReplyException) {
+            return result.changeStatus(Status.COMMENT_CANNOT_REPLY);
         }
 
         return result.changeStatus(Status.COMMENT);
@@ -78,7 +81,6 @@ public class ExceptionAdvice {
 
         return result.changeStatus(Status.POST);
     }
-
 
     @ExceptionHandler(TokenException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -122,6 +124,14 @@ public class ExceptionAdvice {
         return result.changeStatus(Status.HTTP_REQUEST_METHOD_NOT_SUPPORTED);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestApiException dataIntegrityViolationException(DataIntegrityViolationException e) {
+        RestApiException result = new RestApiException();
+        log.error("e = {}", e.getMessage());
+        return result.changeStatus(Status.DB_INTEGRATION);
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public RestApiException exception(Exception e) {
@@ -129,4 +139,5 @@ public class ExceptionAdvice {
         log.error("e = {}", e.getMessage());
         return result.changeStatus(Status.NOT_EXPECTED_EXCEPTION);
     }
+
 }

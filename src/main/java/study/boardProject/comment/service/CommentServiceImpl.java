@@ -12,6 +12,7 @@ import study.boardProject.common.exception.PostException;
 import study.boardProject.post.entity.Post;
 import study.boardProject.post.repository.PostRepository;
 
+import static study.boardProject.common.exception.CommentException.*;
 import static study.boardProject.common.exception.CommentException.CommentNotFoundException;
 
 @Service
@@ -57,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
 
     private void validateIfParentIsAlreadyReply(Comment parent) {
         if(parent.isReply())
-            throw new CommentException();
+            throw new CannotReplyException();
     }
 
 }

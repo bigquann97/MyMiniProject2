@@ -29,7 +29,7 @@ public class User extends TimeStamp {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
