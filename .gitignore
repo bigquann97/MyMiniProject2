@@ -240,3 +240,6 @@ gradle-app.setting
 application.yml
 **/temp/
 *.yml
+
+### Querydsl
+/src/main/generated

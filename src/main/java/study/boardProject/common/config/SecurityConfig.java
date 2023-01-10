@@ -14,14 +14,14 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import study.boardProject.common.auth.AuthFilter;
+import study.boardProject.common.jwt.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final AuthFilter authFilter;
+    private final JwtFilter jwtFilter;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final AccessDeniedHandler accessDeniedHandler;
 
@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .antMatchers("/test", "/resources/**", "/v3/**").permitAll()
                         .antMatchers("/api/auth/sign-up", "/api/auth/sign-in", "/api/reissue").permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

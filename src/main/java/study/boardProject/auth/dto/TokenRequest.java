@@ -1,11 +1,10 @@
 package study.boardProject.auth.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Getter
 @RequiredArgsConstructor
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public final class TokenRequest {
 
     private final String accessToken;

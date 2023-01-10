@@ -10,11 +10,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import study.boardProject.common.auth.AuthClaims;
-import study.boardProject.common.auth.AuthFilter;
 import study.boardProject.common.auth.AuthUtil;
 import study.boardProject.common.exception.api.RestApiException;
 import study.boardProject.common.exception.api.Status;
 
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtFilter extends OncePerRequestFilter implements AuthFilter {
+public class JwtFilter extends OncePerRequestFilter {
 
     private final AuthUtil authUtil;
 

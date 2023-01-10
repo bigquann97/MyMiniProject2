@@ -1,9 +1,7 @@
 package study.boardProject.auth.dto;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -11,6 +9,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @RequiredArgsConstructor
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public final class LoginRequest {
 
     @ApiModelProperty(value = "아이디", notes = "아이디를 입력해주세요", required = true, example = "sparta")

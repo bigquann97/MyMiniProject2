@@ -1,16 +1,17 @@
 package study.boardProject.auth.dto;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import study.boardProject.auth.entity.User;
 import study.boardProject.auth.entity.UserRole;
 
 import javax.validation.constraints.*;
 
+@Builder
 @Getter
-public final class SignupRequest {
+@RequiredArgsConstructor
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+public class SignupRequest {
 
     @ApiModelProperty(value = "아이디", notes = "아이디를 입력해주세요", required = true, example = "sparta")
     @NotBlank
@@ -42,16 +43,6 @@ public final class SignupRequest {
     @Positive
     @Max(value = 130, message = "1 ~ 130 사이 숫자를 입력해주세요.")
     private final Integer age;
-
-    @Builder
-    public SignupRequest(String loginId, String loginPw, String nickname, String name, String email, Integer age) {
-        this.loginId = loginId;
-        this.loginPw = loginPw;
-        this.nickname = nickname;
-        this.name = name;
-        this.email = email;
-        this.age = age;
-    }
 
     public User toEntity(String encodedPw) {
         return User.builder()

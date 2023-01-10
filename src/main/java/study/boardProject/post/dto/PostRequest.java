@@ -1,13 +1,16 @@
 package study.boardProject.post.dto;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import study.boardProject.auth.entity.User;
 import study.boardProject.post.entity.Post;
 
 @Getter
 @RequiredArgsConstructor
+@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public final class PostRequest {
 
     @ApiModelProperty(value = "제목", notes = "제목을 입력해주세요", required = true, example = "제목")

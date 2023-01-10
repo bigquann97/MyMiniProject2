@@ -2,11 +2,10 @@ package study.boardProject.auth.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import study.boardProject.common.auth.AuthDto;
 
 @Getter
-public final class TokenDto extends AuthDto {
+public final class TokenDto implements AuthDto {
 
     private final String grantType;
     private final String accessToken;
