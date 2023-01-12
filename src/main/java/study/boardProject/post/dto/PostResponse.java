@@ -41,6 +41,7 @@ public final class PostResponse {
         for (Comment comment : commentAndLikeCount.keySet()) {
             Long likeCount = commentAndLikeCount.get(comment);
             CommentResponse responseDto = CommentResponse.of(comment, likeCount);
+
             if(comment.isReply()) {
                 Comment parent = comment.getParent();
                 CommentResponse parentDto = comments.stream()
@@ -50,6 +51,7 @@ public final class PostResponse {
                 parentDto.addReply(responseDto);
                 continue;
             }
+
             comments.add(responseDto);
         }
 

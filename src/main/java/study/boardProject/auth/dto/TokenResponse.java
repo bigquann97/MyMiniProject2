@@ -18,7 +18,7 @@ public final class TokenResponse {
 
     public static TokenResponse of(TokenDto tokenDto) {
         return TokenResponse.builder()
-                .accessToken("Bearer " + tokenDto.getAccessToken())
+                .accessToken(tokenDto.getAccessToken())
                 .refreshToken(tokenDto.getRefreshToken())
                 .build();
     }

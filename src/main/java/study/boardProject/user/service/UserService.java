@@ -17,4 +17,6 @@ public interface UserService {
 
     List<CommentResponse> getMyLikeComments(int page, Pageable pageable, User user);
 
+    void deleteUser(User user);
+
 }

@@ -9,7 +9,16 @@ import study.boardProject.comment.entity.Comment;
 import study.boardProject.like.entity.Like;
 import study.boardProject.post.entity.Post;
 
+import java.util.Collection;
+
 public interface LikeRepository extends JpaRepository<Like, Long> {
+
+    void deleteByCommentIn(@NonNull Collection<Comment> comments);
+
+    void deleteByPost(@NonNull Post post);
+
+    long deleteByComment(@NonNull Comment comment);
+
     long countByComment(@NonNull Comment comment);
 
     long countByPost(@NonNull Post post);

@@ -2,6 +2,7 @@ package study.boardProject.comment.service;
 
 import study.boardProject.auth.entity.User;
 import study.boardProject.comment.dto.CommentRequest;
+import study.boardProject.comment.entity.Comment;
 
 public interface CommentService {
 
@@ -12,5 +13,7 @@ public interface CommentService {
     void deleteComment(Long commentId, User user);
 
     void writeReply(Long parentId, CommentRequest commentRequest, User user);
+
+    void deleteCommentAndBelongs(Comment comment);
 
 }

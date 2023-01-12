@@ -42,9 +42,10 @@ public class PostController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public PostResponse getOnePost(
-            @PathVariable Long id
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "1") int page
     ) {
-        return postService.getOnePost(id);
+        return postService.getOnePost(id, page - 1);
     }
 
     // /api/posts?page=1
@@ -80,7 +81,7 @@ public class PostController {
             @PathVariable Long postId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        postService.deletePostAndBelongs(postId, userDetails.getUser());
+        postService.deletePost(postId, userDetails.getUser());
     }
 
 }

@@ -72,7 +72,6 @@ public class JwtUtil implements AuthUtil {
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .setSubject(authentication.getName())
                 .setExpiration(refreshExpiration)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();

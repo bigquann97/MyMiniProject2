@@ -12,7 +12,12 @@ import java.util.Objects;
 
 @Entity
 @Getter
-@Table(name = "users")
+@Table(
+        name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"email"})
+        }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends TimeStamp {
 
@@ -58,7 +63,7 @@ public class User extends TimeStamp {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
+        return email != null && Objects.equals(email, user.email);
     }
 
     @Override

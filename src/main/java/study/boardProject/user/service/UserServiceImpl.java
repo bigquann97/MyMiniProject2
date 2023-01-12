@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.boardProject.auth.entity.User;
+import study.boardProject.auth.repository.UserRepository;
 import study.boardProject.comment.dto.CommentResponse;
 import study.boardProject.comment.entity.Comment;
 import study.boardProject.comment.repository.CommentRepository;
@@ -14,20 +15,24 @@ import study.boardProject.like.repository.LikeRepository;
 import study.boardProject.post.dto.PostSimpleResponse;
 import study.boardProject.post.entity.Post;
 import study.boardProject.post.repository.PostRepository;
+import study.boardProject.post.service.PostService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
+    private final PostService postService;
+    private final UserRepository userRepository;
+
     @Override
+    @Transactional(readOnly = true)
     public List<PostSimpleResponse> getMyPosts(int page, Pageable pageable, User user) {
         List<PostSimpleResponse> result = new ArrayList<>();
         Page<Post> pagedPosts = postRepository.findByUser(user, pageable.withPage(page));
@@ -40,6 +45,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CommentResponse> getMyComments(int page, Pageable pageable, User user) {
         List<CommentResponse> result = new ArrayList<>();
         Page<Comment> pagedComment = commentRepository.findByUser(user, pageable.withPage(page));
@@ -52,6 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PostSimpleResponse> getMyLikePosts(int page, Pageable pageable, User user) {
         List<PostSimpleResponse> result = new ArrayList<>();
         Page<Like> pagedPostLikes = likeRepository.findByUserAndCommentNull(user, pageable.withPage(page));
@@ -65,6 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CommentResponse> getMyLikeComments(int page, Pageable pageable, User user) {
         List<CommentResponse> result = new ArrayList<>();
         Page<Like> pagedCommentLikes = likeRepository.findByUserAndPostNull(user, pageable.withPage(page));
@@ -75,6 +83,16 @@ public class UserServiceImpl implements UserService {
             result.add(element);
         }
         return result;
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(User user) {
+        List<Post> posts = postRepository.findByUser(user);
+        for (Post post : posts) {
+            postService.deletePostAndBelongs(post);
+        }
+        userRepository.delete(user);
     }
 
 }

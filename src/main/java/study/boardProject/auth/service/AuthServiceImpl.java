@@ -69,9 +69,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public TokenResponse reissue(TokenRequest tokenRequest) {
-        validateRefreshToken(tokenRequest);
-        String email = authUtil.parseAuthClaims(tokenRequest.getRefreshToken()).getSubject();
+    public TokenResponse reissue(TokenRequest tokenRequest, HttpServletResponse response) {
+        validateRefreshToken(tokenRequest.getRefreshToken());
+        String email = authUtil.parseAuthClaims(tokenRequest.getAccessToken()).getSubject();
         RefreshToken refreshToken = refreshTokenRepository.findByEmail(email).orElseThrow(AlreadyLogoutException::new);
 
         validateRefreshTokenOwner(refreshToken, tokenRequest);
@@ -84,10 +84,8 @@ public class AuthServiceImpl implements AuthService {
             RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
             refreshTokenRepository.save(newRefreshToken);
 
-            return TokenResponse.builder()
-                    .accessToken(tokenDto.getAccessToken())
-                    .refreshToken(tokenDto.getRefreshToken())
-                    .build();
+            response.addHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + tokenDto.getAccessToken());
+            return TokenResponse.of(tokenDto);
         }
 
         throw new TokenException();
@@ -108,8 +106,8 @@ public class AuthServiceImpl implements AuthService {
             throw new PasswordNotCorrectException();
     }
 
-    private void validateRefreshToken(TokenRequest tokenRequestDto) {
-        if (!authUtil.validateAuthTool(tokenRequestDto.getRefreshToken())) {
+    private void validateRefreshToken(String refreshToken) {
+        if (!authUtil.validateAuthTool(refreshToken)) {
             throw new InvalidRefreshTokenException();
         }
     }

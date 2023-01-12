@@ -34,4 +34,5 @@ public class RefreshToken {
     public boolean validateOwner(String refreshToken) {
         return this.refreshToken.equals(refreshToken);
     }
+
 }

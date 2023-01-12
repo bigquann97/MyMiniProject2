@@ -75,4 +75,12 @@ public class UserController {
         return userService.getMyLikeComments(page - 1, pageable, userDetails.getUser());
     }
 
+    @DeleteMapping("/deletion")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void deleteAccount(
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        userService.deleteUser(userDetails.getUser());
+    }
 }

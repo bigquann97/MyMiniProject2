@@ -137,6 +137,7 @@ public class ExceptionAdvice {
     public RestApiException exception(Exception e) {
         RestApiException result = new RestApiException();
         log.error("e = {}", e.getMessage());
+        e.printStackTrace();
         return result.changeStatus(Status.NOT_EXPECTED_EXCEPTION);
     }
 

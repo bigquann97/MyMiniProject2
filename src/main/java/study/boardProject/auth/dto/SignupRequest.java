@@ -11,6 +11,7 @@ import javax.validation.constraints.*;
 @Getter
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+@EqualsAndHashCode
 public class SignupRequest {
 
     @ApiModelProperty(value = "아이디", notes = "아이디를 입력해주세요", required = true, example = "sparta")

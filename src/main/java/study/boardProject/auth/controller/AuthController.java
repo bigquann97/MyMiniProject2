@@ -39,8 +39,8 @@ public class AuthController {
     @ApiOperation(value = "토큰 재발급", notes = "토큰 재발급 요청")
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/re-issue")
-    public void reissue(@RequestBody TokenRequest tokenRequest) {
-        authService.reissue(tokenRequest);
+    public TokenResponse reissue(@RequestBody TokenRequest tokenRequest, HttpServletResponse response) {
+        return authService.reissue(tokenRequest, response);
     }
 
 }

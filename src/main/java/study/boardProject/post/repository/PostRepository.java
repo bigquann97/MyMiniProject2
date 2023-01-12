@@ -6,8 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import study.boardProject.auth.entity.User;
 import study.boardProject.post.entity.Post;
 
+import java.util.List;
+
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByUser(User user, Pageable pageable);
+
+    List<Post> findByUser(User user);
 
 }

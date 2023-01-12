@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.boardProject.auth.entity.User;
 import study.boardProject.comment.entity.Comment;
 import study.boardProject.comment.repository.CommentRepository;
+import study.boardProject.comment.service.CommentService;
 import study.boardProject.like.repository.LikeRepository;
 import study.boardProject.post.dto.PostRequest;
 import study.boardProject.post.dto.PostResponse;
@@ -15,10 +16,7 @@ import study.boardProject.post.dto.PostSimpleResponse;
 import study.boardProject.post.entity.Post;
 import study.boardProject.post.repository.PostRepository;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static study.boardProject.common.exception.PostException.PostNotFoundException;
 
@@ -31,6 +29,8 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
+    private final CommentService commentService;
+
     @Override
     @Transactional
     public void uploadPost(PostRequest postRequest, User user) {
@@ -40,13 +40,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public PostResponse getOnePost(Long postId) {
+    public PostResponse getOnePost(Long postId, int page) {
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
         long postLikeCount = likeRepository.countByPost(post);
+
         List<Comment> comments = commentRepository.findByPost(post);
+        List<Comment> pagedComments = pagingComments(comments, page);
+
         Map<Comment, Long> commentMap = new LinkedHashMap<>();
 
-        for (Comment comment : comments) {
+        for (Comment comment : pagedComments) {
             long commentLikeCount = likeRepository.countByComment(comment);
             commentMap.put(comment, commentLikeCount);
         }
@@ -78,10 +81,61 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void deletePostAndBelongs(Long postId, User user) {
+    public void deletePost(Long postId, User user) {
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
         post.validateUser(user);
-        postRepository.delete(post);
+        deletePostAndBelongs(post);
     }
+
+    @Override
+    @Transactional
+    public void deletePostAndBelongs(Post post) {
+        List<Comment> comments = commentRepository.findByPost(post); // 게시글 관련 모든 댓글 찾아오기
+        for (Comment comment : comments) { // 게시글에 달린 모든 댓글 삭제
+            commentService.deleteCommentAndBelongs(comment);
+        }
+        likeRepository.deleteByPost(post); // 게시글에 달린 모든 좋아요 삭제
+        postRepository.delete(post); // 최종 게시물 삭제
+    }
+
+    private List<Comment> pagingComments(List<Comment> comments, int page) {
+        LinkedList<Comment> pagedComments = new LinkedList<>();
+
+        for (int i = 0; i <= page; i++) {
+
+            total:
+            for (Comment comment : comments) {
+                if(!comment.isReply()) {
+                    pagedComments.add(comment);
+
+                    if(pagedComments.size() == 10) break;
+
+                    for (Comment reply : comments) {
+                        if(reply.isReply()) {
+                            if (reply.getParent().getId().equals(comment.getId())) {
+                                pagedComments.add(reply);
+
+                                if(pagedComments.size() == 10) break total;
+                            }
+                        }
+                    }
+
+                } else {
+                    pagedComments.add(comment);
+                    if(pagedComments.size() == 10) break;
+                }
+            }
+
+            if (i != page) {
+                comments.removeAll(pagedComments);
+                pagedComments.removeAll(pagedComments);
+            }
+
+        }
+
+
+        return pagedComments;
+    }
+
 
 }

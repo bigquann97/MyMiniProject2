@@ -13,6 +13,6 @@ public interface AuthService {
 
     TokenResponse login(LoginRequest loginRequest, HttpServletResponse response);
 
-    TokenResponse reissue(TokenRequest tokenRequest);
+    TokenResponse reissue(TokenRequest tokenRequest, HttpServletResponse response);
 
 }

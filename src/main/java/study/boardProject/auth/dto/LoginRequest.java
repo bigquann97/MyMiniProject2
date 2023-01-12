@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 @Getter
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
+@EqualsAndHashCode
 public final class LoginRequest {
 
     @ApiModelProperty(value = "아이디", notes = "아이디를 입력해주세요", required = true, example = "sparta")

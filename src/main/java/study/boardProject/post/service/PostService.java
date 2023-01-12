@@ -5,12 +5,13 @@ import study.boardProject.auth.entity.User;
 import study.boardProject.post.dto.PostRequest;
 import study.boardProject.post.dto.PostResponse;
 import study.boardProject.post.dto.PostSimpleResponse;
+import study.boardProject.post.entity.Post;
 
 import java.util.List;
 
 public interface PostService {
 
-    PostResponse getOnePost(Long postId);
+    PostResponse getOnePost(Long postId, int page);
 
     List<PostSimpleResponse> findPagePost(Pageable pageable, int page);
 
@@ -18,6 +19,8 @@ public interface PostService {
 
     void modifyPost(Long id, PostRequest postRequest, User user);
 
-    void deletePostAndBelongs(Long postId, User user);
+    void deletePost(Long postId, User user);
+
+    void deletePostAndBelongs(Post post);
 
 }

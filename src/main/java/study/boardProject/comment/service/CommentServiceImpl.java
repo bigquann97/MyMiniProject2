@@ -9,8 +9,11 @@ import study.boardProject.comment.entity.Comment;
 import study.boardProject.comment.repository.CommentRepository;
 import study.boardProject.common.exception.CommentException;
 import study.boardProject.common.exception.PostException;
+import study.boardProject.like.repository.LikeRepository;
 import study.boardProject.post.entity.Post;
 import study.boardProject.post.repository.PostRepository;
+
+import java.util.List;
 
 import static study.boardProject.common.exception.CommentException.*;
 import static study.boardProject.common.exception.CommentException.CommentNotFoundException;
@@ -21,6 +24,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
 
     @Override
     @Transactional
@@ -53,7 +57,17 @@ public class CommentServiceImpl implements CommentService {
     public void deleteComment(Long commentId, User user) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         comment.validateUser(user);
-        commentRepository.delete(comment);
+        deleteCommentAndBelongs(comment);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCommentAndBelongs(Comment comment) {
+        List<Comment> replies = commentRepository.findByParent(comment); // 댓글에 달린 모든 대댓글 조회
+        likeRepository.deleteByCommentIn(replies); // 대댓글의 좋아요 삭제
+        likeRepository.deleteByComment(comment); // 댓글의 좋아요 삭제
+        commentRepository.deleteAll(replies); // 대댓글 삭제
+        commentRepository.delete(comment); // 댓글 삭제
     }
 
     private void validateIfParentIsAlreadyReply(Comment parent) {
