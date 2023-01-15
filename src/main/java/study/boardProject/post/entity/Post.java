@@ -20,7 +20,7 @@ import static study.boardProject.common.exception.AuthException.AuthenticationEx
 public class Post extends TimeStamp {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
