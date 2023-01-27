@@ -28,7 +28,6 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
-
     private final CommentService commentService;
 
     @Override

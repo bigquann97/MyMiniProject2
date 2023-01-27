@@ -1,12 +1,9 @@
 package study.boardProject.category.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import study.boardProject.auth.entity.User;
 import study.boardProject.category.dto.CategoryRequest;
 import study.boardProject.category.service.CategoryService;
-import study.boardProject.common.security.UserDetailsImpl;
 
 @RequestMapping("/api/category")
 @RestController
@@ -14,6 +11,11 @@ import study.boardProject.common.security.UserDetailsImpl;
 public class CategoryController {
 
     private final CategoryService categoryService;
+
+    @GetMapping
+    public void getAllCategories() {
+        categoryService.getAllCategories();
+    }
 
     // 카테고리 생성
     @PostMapping
@@ -39,4 +41,5 @@ public class CategoryController {
     ) {
         categoryService.deleteCategory(id);
     }
+
 }

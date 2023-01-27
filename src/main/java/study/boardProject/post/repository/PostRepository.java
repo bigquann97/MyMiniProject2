@@ -13,10 +13,12 @@ import study.boardProject.post.entity.Post;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
+
     @Transactional
     @Modifying
     @Query("delete from Post p where p.user = ?1")
     void deleteByUserQuery(@NonNull User user);
+
     long deleteByUser(@NonNull User user);
 
     Page<Post> findByUser(User user, Pageable pageable);

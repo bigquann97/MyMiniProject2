@@ -8,4 +8,6 @@ public interface CategoryService {
     void makeChildCategory(Long id, CategoryRequest request);
 
     void deleteCategory(Long id);
+
+    void getAllCategories();
 }
